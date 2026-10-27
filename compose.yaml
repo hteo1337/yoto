@@ -1,0 +1,36 @@
+services:
+    tailscale:
+        image: tailscale/tailscale:stable
+        hostname: yoto
+        environment:
+            TS_AUTHKEY: ${TS_AUTHKEY:?Set TS_AUTHKEY in the untracked .env}
+            TS_HOSTNAME: ${TS_HOSTNAME:-yoto}
+            TS_STATE_DIR: /var/lib/tailscale
+            TS_SERVE_CONFIG: /config/serve.json
+            TS_USERSPACE: "true"
+            TS_ACCEPT_DNS: "false"
+        volumes:
+            - tailscale-state:/var/lib/tailscale
+            - ./selfhost/tailscale:/config:ro
+        restart: unless-stopped
+    app:
+        build:
+            context: .
+            dockerfile: Dockerfile.selfhost
+        network_mode: service:tailscale
+        depends_on:
+            - tailscale
+        environment:
+            PUBLIC_ORIGIN: ${PUBLIC_ORIGIN:?Set the HTTPS ts.net origin}
+            YOTO_CLIENT_ID: ${YOTO_CLIENT_ID:?Set your own Yoto client ID}
+            YOTO_AUTH_SECRET: ${YOTO_AUTH_SECRET:?Set YOTO_AUTH_SECRET}
+            RESEND_API_KEY: ${RESEND_API_KEY:?Set RESEND_API_KEY}
+        volumes:
+            - progress:/data/progress
+            - scratch:/tmp/yoto
+        restart: unless-stopped
+
+volumes:
+    tailscale-state:
+    progress:
+    scratch:
