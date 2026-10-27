@@ -9,3 +9,6 @@ build/
 
 # Wrangler generated types
 worker-configuration.d.ts
+
+# Self-host build output
+build-selfhost/

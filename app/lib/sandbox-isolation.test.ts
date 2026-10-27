@@ -1,14 +1,17 @@
 import {mkdtemp, rm} from "node:fs/promises"
+import http from "node:http"
 import {tmpdir} from "node:os"
 import {join} from "node:path"
 
-import {ProgressStore} from "../../selfhost/shims/storage"
-import {getSandbox as nodeSandbox} from "../../selfhost/shims/sandbox"
-import {WorkflowStep} from "../../selfhost/shims/workers"
-import {ImportProgress} from "../../workers/import-progress"
 import {expect, it, vi} from "vitest"
 
 import {createMockEnv} from "~/tests/mocks"
+
+import {createBindings} from "../../selfhost/shims/bindings"
+import {getSandbox as nodeSandbox} from "../../selfhost/shims/sandbox"
+import {ProgressStore} from "../../selfhost/shims/storage"
+import {installFetchDeadline, WorkflowStep} from "../../selfhost/shims/workers"
+import {ImportProgress} from "../../workers/import-progress"
 
 const exec = vi.hoisted(() =>
     vi.fn(async () => ({success: true, stdout: "", stderr: ""})),
@@ -68,8 +71,33 @@ it("isolates imports and supports the self-host runtime contract", async () => {
         ),
     ).rejects.toThrow("timed out")
     await sandbox.destroy()
+    installFetchDeadline()
+    const upstream = http.createServer(() => {})
+    await new Promise<void>(resolve => upstream.listen(0, "127.0.0.1", resolve))
+    try {
+        const address = upstream.address() as {port: number}
+        await expect(
+            step.do(
+                "SDK timeout",
+                {retries: {limit: 0, delay: 0}, timeout: 20},
+                () =>
+                    new Promise((_resolve, reject) => {
+                        http.get(`http://127.0.0.1:${address.port}`, response =>
+                            response.resume(),
+                        ).on("error", reject)
+                    }),
+            ),
+        ).rejects.toThrow("timed out")
+    } finally {
+        upstream.closeAllConnections()
+        await new Promise<void>(resolve => upstream.close(() => resolve()))
+    }
     const directory = await mkdtemp(join(tmpdir(), "yoto-progress-"))
     try {
+        const bindings = createBindings(createMockEnv(), directory)
+        expect(bindings.IMPORT_PROGRESS.getByName("initial")).toBe(
+            bindings.IMPORT_PROGRESS.getByName("initial"),
+        )
         const store = new ProgressStore(directory)
         await store
             .forImport("pending")
@@ -87,6 +115,11 @@ it("isolates imports and supports the self-host runtime contract", async () => {
         await expect(
             restarted.forImport("complete").get("event"),
         ).resolves.toEqual({type: "complete", success: true})
+        const reloadedBindings = createBindings(createMockEnv(), directory)
+        const failed = await reloadedBindings.IMPORT_WORKFLOW.get("pending")
+        expect((await failed.status()).status).toBe("errored")
+        const completed = await reloadedBindings.IMPORT_WORKFLOW.get("complete")
+        expect((await completed.status()).status).toBe("complete")
         const progress = new ImportProgress(
             {
                 storage: restarted.forImport("pending"),

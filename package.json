@@ -32,7 +32,9 @@
         "test:watch": "vitest",
         "typecheck": "react-router typegen && wrangler types && tsc",
         "typecheck:ci": "react-router typegen && tsc",
-        "typegen": "react-router typegen && wrangler types"
+        "typegen": "react-router typegen && wrangler types",
+        "build:selfhost": "YOTO_SELFHOST=1 react-router build --config vite.selfhost.config.ts",
+        "start:selfhost": "node build-selfhost/server/index.js"
     },
     "dependencies": {
         "@cloudflare/sandbox": "0.10.3",

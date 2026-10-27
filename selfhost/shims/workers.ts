@@ -1,5 +1,18 @@
 import {AsyncLocalStorage} from "node:async_hooks"
+import http, {type ClientRequest} from "node:http"
+import https from "node:https"
+import {syncBuiltinESMExports} from "node:module"
 import {setTimeout as delay} from "node:timers/promises"
+
+// Auth helpers also import Cloudflare's module-level env directly.
+export const env = {
+    get YOTO_CLIENT_ID() {
+        return process.env.YOTO_CLIENT_ID
+    },
+    get YOTO_AUTH_SECRET() {
+        return process.env.YOTO_AUTH_SECRET
+    },
+}
 
 const execution = new AsyncLocalStorage<AbortSignal>()
 export const currentSignal = () => execution.getStore()
@@ -71,9 +84,36 @@ export class WorkflowStep {
     }
 }
 
-// All existing SDK and upload fetches inherit the step deadline, including
-// calls made after a timed-out callback resumes. Never trust forwarded headers.
+// SDK uses Axios HTTP; other helpers use fetch. Both inherit step deadlines,
+// including calls made after a timed-out callback resumes.
 export function installFetchDeadline(): void {
+    for (const transport of [http, https]) {
+        for (const method of ["request", "get"] as const) {
+            transport[method] = new Proxy(transport[method], {
+                apply(target, thisArg, args) {
+                    const signal = currentSignal()
+                    signal?.throwIfAborted()
+                    const request = Reflect.apply(
+                        target,
+                        thisArg,
+                        args,
+                    ) as ClientRequest
+                    if (signal) {
+                        const abort = () =>
+                            request.destroy(
+                                new Error("Workflow step timed out"),
+                            )
+                        signal.addEventListener("abort", abort, {once: true})
+                        request.once("close", () =>
+                            signal.removeEventListener("abort", abort),
+                        )
+                    }
+                    return request
+                },
+            })
+        }
+    }
+    syncBuiltinESMExports()
     const original = globalThis.fetch
     globalThis.fetch = (input, init) => {
         const signal = currentSignal()
@@ -95,6 +135,8 @@ export class WorkflowEntrypoint<E, P> {
         protected env: E,
     ) {}
     async run(_event: WorkflowEvent<P>, _step: WorkflowStep): Promise<unknown> {
+        void _event
+        void _step
         throw new Error("Workflow must implement run")
     }
 }

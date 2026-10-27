@@ -1,4 +1,4 @@
-import {spawn, type ChildProcess} from "node:child_process"
+import {type ChildProcess, spawn} from "node:child_process"
 import {rm} from "node:fs/promises"
 
 import {currentSignal} from "./workers"
@@ -65,12 +65,14 @@ export function getSandbox(_binding: unknown, id: string) {
                     chunk: Buffer,
                     output: "stdout" | "stderr",
                 ) => {
-                    bytes += chunk.length
+                    bytes += Buffer.byteLength(chunk)
                     if (bytes > OUTPUT_LIMIT)
                         return stop("Sandbox output limit exceeded")
-                    if (output === "stdout") stdout += chunk.toString()
-                    else stderr += chunk.toString()
+                    if (output === "stdout") stdout += chunk
+                    else stderr += chunk
                 }
+                child.stdout.setEncoding("utf8")
+                child.stderr.setEncoding("utf8")
                 child.stdout.on("data", chunk => collect(chunk, "stdout"))
                 child.stderr.on("data", chunk => collect(chunk, "stderr"))
                 child.on("error", () => {

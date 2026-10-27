@@ -1,6 +1,9 @@
 import pLimit from "p-limit"
 
-import type {ImportWorkflowParams} from "../../app/lib/import"
+import type {
+    ImportStreamEvent,
+    ImportWorkflowParams,
+} from "../../app/lib/import"
 import {logger} from "../../app/lib/logger.server"
 import {ImportProgress} from "../../workers/import-progress"
 import {ImportWorkflow} from "../../workers/import-workflow"
@@ -48,12 +51,43 @@ export function createBindings(
                         } as unknown as DurableObjectState,
                         bindings as unknown as Env,
                     )
-                    if (running.has(id)) instances.set(id, instance)
+                    instances.set(id, instance)
                 }
                 return instance
             },
         },
         IMPORT_WORKFLOW: {
+            async get(id: string) {
+                const storage = store.forImport(id)
+                if (!(await storage.get("event")))
+                    throw new Error("Unknown import ID")
+                return {
+                    status: async () => {
+                        const event =
+                            await storage.get<ImportStreamEvent>("event")
+                        if (event?.type === "error")
+                            return {
+                                status: "errored",
+                                error: {name: "Error", message: event.error},
+                            }
+                        if (event?.type === "complete")
+                            return {
+                                status: "complete",
+                                output: {
+                                    importId: id,
+                                    status: "success",
+                                    message: event.message,
+                                    added: event.added,
+                                    skipped: event.skipped,
+                                    ...(event.description
+                                        ? {description: event.description}
+                                        : {}),
+                                },
+                            }
+                        return {status: running.has(id) ? "running" : "queued"}
+                    },
+                }
+            },
             async create({
                 id,
                 params,
@@ -69,8 +103,12 @@ export function createBindings(
                 try {
                     await storage.put("event", {
                         type: "progress",
-                        phase: "queued",
+                        phase: "preparing",
                         percent: 0,
+                        total: 0,
+                        prepared: 0,
+                        uploaded: 0,
+                        ready: 0,
                     })
                 } catch (error) {
                     running.delete(id)

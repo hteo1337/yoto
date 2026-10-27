@@ -34,3 +34,6 @@ jobs:
 
             - name: Test
               run: npm run test
+
+            - name: Build self-host
+              run: npm run build:selfhost

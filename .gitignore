@@ -16,3 +16,6 @@ build/
 
 # Cloudflare
 .wrangler
+
+# Self-host build output
+build-selfhost/
