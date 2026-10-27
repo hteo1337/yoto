@@ -7,4 +7,4 @@
 - decided: adversarial required (default yes) — actual diff/plan rejected by semif HTTP422 at 26,384 > 4,096 tokens; credentials, concurrency/deadlines and restarts match rubric.
 - Next: lead reconcile dispatcher stage/attempt and launch exactly one adversarial latest-Sol review after this primary stops; corrected review-labelled request refused with idempotency conflict, no extra task created. See handoffs/TH1-1999/BLOCKED.md.
 - Open: live ts.net video/playlist/reload/restart/outside-tailnet and iOS checks still require Teo's Yoto client/callback and Tailscale HTTPS/auth key; image/multiarch claims not rerun in review.
-- Boundaries: source branch untouched; PR remains draft; no merge/ready/account/sidecar actions. Dispatcher launch record preserved in handoffs/TH1-1999/dispatcher-status.log; this separate review branch alone is committed/pushed.
+- Boundaries: source branch untouched; PR remains draft; no merge/ready/account/sidecar actions. Dispatcher launch record preserved in handoffs/TH1-1999/dispatcher-status.log; review artifacts pushed at 4f31d20 with final checklist checkpoint after remote verification; Linear acceptance updated with review result.
