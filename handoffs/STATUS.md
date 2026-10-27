@@ -1,10 +1,10 @@
 # TH1-1999 — Self-host Yoto Sync on Docker + Tailscale
-
-- Branch: hteo1337/th1-1999-self-host-yoto-sync-on-docker-tailscale; draft fork PR https://github.com/hteo1337/yoto/pull/1; Linear In Review, project Yoto Sync.
-- Done: docs/self-host.md steps 1–8 committed separately/in order; final SSE bridge cancels upstream on disconnect; Cloudflare workers/app.ts, wrangler.jsonc and upstream plan.md unchanged.
-- Verification: format/lint/typecheck:ci/build/build:selfhost exit0; full Vitest once at b616af1: 25 files/279 passed; after stream fix, scoped composite regression 1/1 passed (full suite not repeated under cap).
-- Verification: final OCI amd64+arm64 digest 09018229e23c93ed9970b88fda6904af394f34f84510df90450f9c6b79f96062; WSL amd64 build exit0, health200, UID1000, yt-dlp2026.10.26, ffmpeg5.1.9, supported Node22.23.4.
-- Next: lead dispatches primary latest-Sol review after writer stops (HTTP409 active-task admission); then Jev/semif and required/default-yes adversarial review. No review launched/verdict; see handoffs/TH1-1999/BLOCKED.md.
-- CI: GitHub reports zero registered workflows, no branch runs/PR checks; unverified, never green. PR remains draft; no merge or install performed.
-- Open: Teo Yoto client/callback and Tailscale HTTPS/auth key; real ts.net video/playlist/reload/restart/outside-tailnet and iOS installation checks remain unverified.
-- decided: primary host hteo-pc-wsl (amd64 WSL2/Docker29.9.2/systemd); Docker Desktop starts at Windows sign-in; sidecar never started. Temporary local/WSL artifacts cleaned; 12 older WSL cache records preserved.
+- Reviewer branch: review/TH1-1999-ab97fd0bc203; source branch: hteo1337/th1-1999-self-host-yoto-sync-on-docker-tailscale; source head 4a72f760d09c1a64335d4deccd8bfaf35a715ce7.
+- Issue: https://linear.app/th1337/issue/TH1-1999/self-host-yoto-sync-on-docker-tailscale (Yoto Sync, In Review); draft PR https://github.com/hteo1337/yoto/pull/1.
+- Done: single adversarial latest-Sol (codex-auto/gpt-6.1-sol, task_status inspected) review.txt and one byte-matched BLOCKING comment https://github.com/hteo1337/yoto/pull/1#issuecomment-6452163581; primary 19:46Z review not repeated.
+- Finding: startup marks imports interrupted but permanently retains persistent scratch; recovery repro failed. Additional uncaught kill EPERM observed on macOS; Linux impact unverified.
+- Verification: npm ci/build:selfhost exit0; npm test exactly once, 25 files/279 passed; composite adversarial test once, 1 failed cleanup assertion + 1 unhandled EPERM; separate parent/child env control exit0.
+- Evidence: handoffs/TH1-1999/{adversarial.test.ts,adversarial-repro.log,npm-test-adversarial.log,build-selfhost-adversarial.log,env-control.mjs,env-control.log,comment-receipt.json}; initial dirty dispatcher handoff preserved in dispatch-launch.txt.
+- Next: author fixes blocking scratch reclamation; same adversarial reviewer confirms only that fix. Blocker in handoffs/TH1-1999/BLOCKED.md. Product source/feature head unchanged; review artifacts only on reviewer branch.
+- CI unavailable: zero workflows/checks; never green. Open: real ts.net imports/reload/restart/outside-tailnet and iOS checks need Teo prerequisites; no sidecar/accounts/merge/ready transition.
+- decided: Jev yes (0.995), security/concurrency/installers/restarts; bounded one composite regression plus narrow env control; temporary dependencies/build/scratch artifacts cleaned before reviewer-branch push.

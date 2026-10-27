@@ -1,0 +1,80 @@
+
+ RUN  v4.0.18 /Users/hteo/.paseo/worktrees/2khn4gl5/06e837d2fd4f
+
+stdout | handoffs/TH1-1999/adversarial.test.ts > adversarial real-path smoke and interrupted-scratch reclamation
+{
+  message: 'youtube.audio.download.completed',
+  sandboxId: 'import-28f03163-b8c5-4e25-8679-e7b6987cc4de',
+  videoId: "../../outside'$(touch /var/folders/9z/jtl3ybm970jbvhs_tkn0f1_w0000gn/T/yoto-adversarial-3orI00/shell-injection)",
+  sourceDurationSeconds: undefined,
+  durationMs: 17,
+  level: 'info'
+}
+
+PROBE shell/path/env/output: rejected traversal, no injection, outside sentinel preserved, oversized output rejected
+PROBE concurrency/deadline: one duplicate admitted, peak=3, queued fourth ran, exhaustion/deadline rejected
+PROBE origin/auth: 6 path/authority variants kept canonical origin + secure host-only cookie; unauthenticated import 401; missing-state callback denied
+PROBE restart: terminalError=true interruptedScratchSurvives=true
+ ❯ handoffs/TH1-1999/adversarial.test.ts (1 test | 1 failed) 652ms
+   × adversarial real-path smoke and interrupted-scratch reclamation 652ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  handoffs/TH1-1999/adversarial.test.ts > adversarial real-path smoke and interrupted-scratch reclamation
+AssertionError: startup must reclaim scratch for terminal interrupted imports: expected true to be false // Object.is equality
+
+- Expected
++ Received
+
+- false
++ true
+
+ ❯ handoffs/TH1-1999/adversarial.test.ts:142:97
+    140|         const scratchSurvives=await access(join(owned,"download.m4a.pa…
+    141|         process.stdout.write(`PROBE restart: terminalError=${record.ev…
+    142|         expect(scratchSurvives,"startup must reclaim scratch for termi…
+       |                                                                                                 ^
+    143|     } finally {
+    144|         release?.()
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+⎯⎯⎯⎯⎯⎯ Unhandled Errors ⎯⎯⎯⎯⎯⎯
+
+Vitest caught 1 unhandled error during the test run.
+This might cause false positive tests. Resolve unhandled errors to make sure your tests are not affected.
+
+⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯
+Error: kill EPERM
+ ❯ process.kill node:internal/process/per_thread:277:13
+ ❯ kill selfhost/shims/sandbox.ts:19:17
+     17|     if (!child.pid || killed.has(child)) return
+     18|     try {
+     19|         process.kill(-child.pid, "SIGKILL")
+       |                 ^
+     20|         killed.add(child)
+     21|     } catch (error) {
+ ❯ stop selfhost/shims/sandbox.ts:56:21
+ ❯ collect selfhost/shims/sandbox.ts:70:32
+ ❯ Socket.<anonymous> selfhost/shims/sandbox.ts:76:50
+ ❯ Socket.emit node:events:514:20
+ ❯ addChunk node:internal/streams/readable:605:12
+ ❯ readableAddChunkPushByteMode node:internal/streams/readable:556:3
+ ❯ Socket.Readable.push node:internal/streams/readable:436:5
+ ❯ Pipe.onStreamRead node:internal/stream_base_commons:194:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { errno: -1, code: 'EPERM', syscall: 'kill' }
+This error originated in "handoffs/TH1-1999/adversarial.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+The latest test that might've caused the error is "adversarial real-path smoke and interrupted-scratch reclamation". It might mean one of the following:
+- The error was thrown, while Vitest was running this test.
+- If the error occurred after the test had been completed, this was the last documented test before it was thrown.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed (1)
+     Errors  1 error
+   Start at  21:53:57
+   Duration  950ms (transform 88ms, setup 0ms, import 166ms, tests 652ms, environment 0ms)
+

@@ -1,0 +1,2 @@
+Executed once via node --input-type=module heredoc, same source as env-control.mjs; exit 0:
+ENV CONTROL PASS: both synthetic keys present in parent, both absent in child; no values printed

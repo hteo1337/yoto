@@ -1,0 +1,10 @@
+{
+  "comment_url": "https://github.com/hteo1337/yoto/pull/1#issuecomment-6452163581",
+  "comment_id": 6452163581,
+  "body_sha256": "b893d838e01ca9c9728e317b40897b2452959a19edd319933af8fb64e05f486d",
+  "byte_match": true,
+  "adversarial_comment_count": 1,
+  "source_head": "4a72f760d09c1a64335d4deccd8bfaf35a715ce7",
+  "provider": "codex-auto",
+  "model": "gpt-6.1-sol"
+}

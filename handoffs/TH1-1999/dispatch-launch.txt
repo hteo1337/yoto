@@ -1,0 +1,45 @@
+# TH1-1999 — Self-host Yoto Sync on Docker + Tailscale
+
+- Branch: hteo1337/th1-1999-self-host-yoto-sync-on-docker-tailscale; draft fork PR https://github.com/hteo1337/yoto/pull/1; Linear In Review, project Yoto Sync.
+- Done: docs/self-host.md steps 1–8 committed separately/in order; final SSE bridge cancels upstream on disconnect; Cloudflare workers/app.ts, wrangler.jsonc and upstream plan.md unchanged.
+- Verification: format/lint/typecheck:ci/build/build:selfhost exit0; full Vitest once at b616af1: 25 files/279 passed; after stream fix, scoped composite regression 1/1 passed (full suite not repeated under cap).
+- Verification: final OCI amd64+arm64 digest 09018229e23c93ed9970b88fda6904af394f34f84510df90450f9c6b79f96062; WSL amd64 build exit0, health200, UID1000, yt-dlp2026.10.26, ffmpeg5.1.9, supported Node22.23.4.
+- Next: lead dispatches primary latest-Sol review after writer stops (HTTP409 active-task admission); then Jev/semif and required/default-yes adversarial review. No review launched/verdict; see handoffs/TH1-1999/BLOCKED.md.
+- CI: GitHub reports zero registered workflows, no branch runs/PR checks; unverified, never green. PR remains draft; no merge or install performed.
+- Open: Teo Yoto client/callback and Tailscale HTTPS/auth key; real ts.net video/playlist/reload/restart/outside-tailnet and iOS installation checks remain unverified.
+- decided: primary host hteo-pc-wsl (amd64 WSL2/Docker29.9.2/systemd); Docker Desktop starts at Windows sign-in; sidecar never started. Temporary local/WSL artifacts cleaned; 12 older WSL cache records preserved.
+
+## New launch
+
+Task: Adversarial review: TH1-1999 self-host (hteo1337/yoto#1)
+Issue: https://linear.app/th1337/issue/TH1-1999/self-host-yoto-sync-on-docker-tailscale
+Branch: review/TH1-1999-ab97fd0bc203
+Adopted branch: no
+Acceptance: Perform the single ADVERSARIAL review of draft PR https://github.com/hteo1337/yoto/pull/1 (Linear TH1-1999, head 4a72f760), in your own separate worktree. Read-only on the feature branch.
+
+decided: Jev yes (0.995). The rubric matched auth/cookies, credentials, concurrency, installers and restart policy.
+
+The primary Sol review already returned CONFIRMED (the PR comment at 19:46Z). Do NOT repeat it. Assume it missed something, and try to break the change with concrete exploits or failure repros:
+
+1. **Auth bypass and session issues:**
+   - Break the PUBLIC_ORIGIN rewrite (selfhost/server.ts) via absolute-form request targets, Host header tricks, path-normalisation or `//` paths, or HTTP/1.1 vs HTTP/2 differences.
+   - Look for session fixation, or cookie scope issues under the ts.net origin.
+2. **Command injection in selfhost/shims/sandbox.ts and its callers:**
+   - Get attacker-controlled YouTube titles, ids or playlist entries into argv or the shell.
+   - Escape the per-import directory with ID or path traversal, or delete outside it in destroy().
+   - Find a way past the 8 MiB output cap, or leak the child process environment.
+3. **Concurrency and restarts:**
+   - Race two imports for the same card, or reattach to an import concurrently.
+   - Look for p-limit starvation, or progress-file corruption from non-atomic writes or interleaving.
+   - Check whether restarting mid-step leaves orphan child processes, or temp files that are never cleaned.
+   - Look for fail-open behaviour on retry exhaustion or deadline expiry.
+4. **Tailscale/compose:**
+   - Find any accidental exposure: published ports, a bind on 0.0.0.0 outside the sidecar network namespace, or Funnel.
+   - Check whether TS_AUTHKEY could end up in the image or in logs.
+   - Check whether the container ends up running as root.
+
+For each suspected issue, give a minimal repro (a test, a curl command, or an exact input) and run it where possible. Run the existing suite once (`npm test`) and quote the counts. Write review.txt and post exactly one PR comment starting with `Verdict: CONFIRMED` or `Verdict: BLOCKING` and a tag `[adversarial]`, with severity-ordered file:line evidence and explicit "nothing found" areas.
+
+Do not merge, mark ready, push to the feature branch, start the sidecar or touch accounts. CI is unavailable on the fork; do not report it as passing.
+Launch: branch=review/TH1-1999-ab97fd0bc203, repo_path=/Users/hteo/Work/GitHub/PERSONAL/yoto, run_id=03aa5ce1830c4c69bcc677cec9bed183, task_id=98a88e14a3cd449bb4e8510fcc103a29, workspace_id=wks_6e5205d3ebad3181
+Continuity launch ID: 98a88e14a3cd449bb4e8510fcc103a29:03aa5ce1830c4c69bcc677cec9bed183
