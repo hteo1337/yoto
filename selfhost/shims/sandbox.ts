@@ -13,13 +13,20 @@ export function sandboxDirectory(id: string): string {
     return `/tmp/yoto/${id}`
 }
 
-function kill(child: ChildProcess): void {
+function kill(child: ChildProcess): string | undefined {
     if (!child.pid || killed.has(child)) return
     try {
         process.kill(-child.pid, "SIGKILL")
         killed.add(child)
     } catch (error) {
-        if ((error as NodeJS.ErrnoException).code !== "ESRCH") throw error
+        if ((error as NodeJS.ErrnoException).code === "ESRCH") return
+        // Group termination can fail on some hosts; never throw from callbacks.
+        try {
+            if (child.kill("SIGKILL")) return
+        } catch {
+            // Report both termination failures through the exec lifecycle.
+        }
+        return "Could not terminate sandbox command"
     }
 }
 
@@ -52,8 +59,8 @@ export function getSandbox(_binding: unknown, id: string) {
                 let bytes = 0
                 let failure: string | undefined
                 const stop = (reason: string) => {
-                    failure = reason
-                    kill(child)
+                    failure ??= reason
+                    if (kill(child)) finish(null)
                 }
                 const abort = () => stop("Workflow step aborted")
                 const timer = setTimeout(
@@ -61,6 +68,15 @@ export function getSandbox(_binding: unknown, id: string) {
                     30 * 60 * 1000,
                 )
                 signal?.addEventListener("abort", abort, {once: true})
+                const finish = (code: number | null) => {
+                    clearTimeout(timer)
+                    signal?.removeEventListener("abort", abort)
+                    resolve({
+                        success: code === 0 && !failure,
+                        stdout,
+                        stderr: failure ?? stderr,
+                    })
+                }
                 const collect = (
                     chunk: Buffer,
                     output: "stdout" | "stderr",
@@ -79,17 +95,12 @@ export function getSandbox(_binding: unknown, id: string) {
                     failure = "Could not start sandbox command"
                 })
                 child.on("close", code => {
-                    clearTimeout(timer)
-                    signal?.removeEventListener("abort", abort)
                     // A shell may exit before its descendants; remove the whole group.
-                    kill(child)
+                    const terminationFailure = kill(child)
+                    failure ??= terminationFailure
                     children.delete(child)
                     if (!children.size) active.delete(id)
-                    resolve({
-                        success: code === 0 && !failure,
-                        stdout,
-                        stderr: failure ?? stderr,
-                    })
+                    finish(code)
                 })
             })
         },
@@ -98,9 +109,10 @@ export function getSandbox(_binding: unknown, id: string) {
             await Promise.all(
                 children.map(
                     child =>
-                        new Promise<void>(resolve => {
+                        new Promise<void>((resolve, reject) => {
                             child.once("close", resolve)
-                            kill(child)
+                            const failure = kill(child)
+                            if (failure) reject(new Error(failure))
                         }),
                 ),
             )

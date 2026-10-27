@@ -3,6 +3,7 @@ import {
     readdirSync,
     readFileSync,
     renameSync,
+    rmSync,
     writeFileSync,
 } from "node:fs"
 import {join} from "node:path"
@@ -23,6 +24,11 @@ export class ProgressStore {
                 !event ||
                 (event.type !== "error" && event.type !== "complete")
             ) {
+                // Reclaim scratch before making the interrupted work terminal.
+                rmSync(sandboxDirectory(`import-${id}`), {
+                    recursive: true,
+                    force: true,
+                })
                 this.write(id, {
                     ...record,
                     event: {
