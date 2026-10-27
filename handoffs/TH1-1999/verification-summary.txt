@@ -1,0 +1,8 @@
+npm ci: exit 0; log=handoffs/TH1-1999/verification-1.log
+npm run format: exit 1; log=handoffs/TH1-1999/verification-2.log
+npm run format: exit 0; log=handoffs/TH1-1999/verification-2.log
+npm run lint: exit 0; log=handoffs/TH1-1999/verification-3.log
+npm run typecheck:ci: exit 0; log=handoffs/TH1-1999/verification-4.log
+npm test: exit 0; log=handoffs/TH1-1999/verification-5.log
+npm run build: exit 0; log=handoffs/TH1-1999/verification-6.log
+npm run build:selfhost: exit 0; log=handoffs/TH1-1999/verification-7.log

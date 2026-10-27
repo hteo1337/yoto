@@ -1,10 +1,10 @@
 # TH1-1999 — Self-host Yoto Sync on Docker + Tailscale
 
-- Branch: hteo1337/th1-1999-self-host-yoto-sync-on-docker-tailscale; draft fork PR https://github.com/hteo1337/yoto/pull/1; Linear In Review, project Yoto Sync.
-- Done: docs/self-host.md steps 1–8 committed separately/in order; final SSE bridge cancels upstream on disconnect; Cloudflare workers/app.ts, wrangler.jsonc and upstream plan.md unchanged.
-- Verification: format/lint/typecheck:ci/build/build:selfhost exit0; full Vitest once at b616af1: 25 files/279 passed; after stream fix, scoped composite regression 1/1 passed (full suite not repeated under cap).
-- Verification: final OCI amd64+arm64 digest 09018229e23c93ed9970b88fda6904af394f34f84510df90450f9c6b79f96062; WSL amd64 build exit0, health200, UID1000, yt-dlp2026.10.26, ffmpeg5.1.9, supported Node22.23.4.
-- Next: lead dispatches primary latest-Sol review after writer stops (HTTP409 active-task admission); then Jev/semif and required/default-yes adversarial review. No review launched/verdict; see handoffs/TH1-1999/BLOCKED.md.
-- CI: GitHub reports zero registered workflows, no branch runs/PR checks; unverified, never green. PR remains draft; no merge or install performed.
-- Open: Teo Yoto client/callback and Tailscale HTTPS/auth key; real ts.net video/playlist/reload/restart/outside-tailnet and iOS installation checks remain unverified.
-- decided: primary host hteo-pc-wsl (amd64 WSL2/Docker29.9.2/systemd); Docker Desktop starts at Windows sign-in; sidecar never started. Temporary local/WSL artifacts cleaned; 12 older WSL cache records preserved.
+- Review branch: review/TH1-1999-945a9ef2ee5e; source hteo1337/th1-1999-self-host-yoto-sync-on-docker-tailscale at 4a72f760d09c1a64335d4deccd8bfaf35a715ce7; PR https://github.com/hteo1337/yoto/pull/1; Linear In Review, project Yoto Sync.
+- Done: primary PR-ready review by inspected codex-auto/gpt-6.1-sol; review.txt byte-matches the single verdict comment https://github.com/hteo1337/yoto/pull/1#issuecomment-6451923159 (CONFIRMED; no blocking findings).
+- Verification: npm ci/format/lint/typecheck:ci/test/build/build:selfhost all exit0 on macOS Node26.12.1; full suite once, 25 files/279 tests; logs in handoffs/TH1-1999/. Initial format exit1 isolated to dispatcher artifacts, preserved before checking committed source.
+- Verification: built Node health200/login302 with spoofed Host/Forwarded headers, correct PUBLIC_ORIGIN callback and Secure/HttpOnly/SameSite=Lax cookie; no external OAuth request. GitHub zero workflows/runs/checks: CI unavailable, never green.
+- decided: adversarial required (default yes) — actual diff/plan rejected by semif HTTP422 at 26,384 > 4,096 tokens; credentials, concurrency/deadlines and restarts match rubric.
+- Next: lead reconcile dispatcher stage/attempt and launch exactly one adversarial latest-Sol review after this primary stops; corrected review-labelled request refused with idempotency conflict, no extra task created. See handoffs/TH1-1999/BLOCKED.md.
+- Open: live ts.net video/playlist/reload/restart/outside-tailnet and iOS checks still require Teo's Yoto client/callback and Tailscale HTTPS/auth key; image/multiarch claims not rerun in review.
+- Boundaries: source branch untouched; PR remains draft; no merge/ready/account/sidecar actions. Dispatcher launch record preserved in handoffs/TH1-1999/dispatcher-status.log; this separate review branch alone is committed/pushed.

@@ -1,0 +1,2 @@
+{ message: 'selfhost.server.started', port: 34819, level: 'info' }
+{ event: 'auth.login.started', level: 'info' }

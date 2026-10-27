@@ -1,0 +1,24 @@
+Verdict: CONFIRMED
+
+Single PR-ready review of TH1-1999 — Self-host Yoto Sync on Docker + Tailscale, PR #1. Reviewed exact source head `4a72f760d09c1a64335d4deccd8bfaf35a715ce7` against main `43e242fadc90635cc177b00403b3e333a18a5ea1`, in separate dispatcher worktree/branch `review/TH1-1999-945a9ef2ee5e`. Provider/model inspected: `codex-auto`, `gpt-6.1-sol`. Read Linear acceptance, `docs/self-host.md`, `PLAN.md`, the handoff and complete diff (lockfile delta inspected structurally). No blocking findings; no severity-ranked defects to report.
+
+Nothing found, in requested severity order:
+
+1. **Auth/cookies:** `selfhost/server.ts:20-40,62-78` validates PUBLIC_ORIGIN, fixes the request origin and removes Forwarded/X-Forwarded-* inputs. The built server returned health 200 and login 302 with spoofed Host/Forwarded/X-Forwarded-* headers; redirect_uri remained `https://review.invalid/auth/callback`, and the OAuth state cookie had Secure, HttpOnly and SameSite=Lax. No external OAuth call was made. Existing auth tests cover callback/token-cookie behavior; real provider login remains unverified.
+2. **Command execution:** `selfhost/shims/sandbox.ts:10-13,37-45,58-85,96-107` validates IDs, builds a minimal child environment without inheriting parent credentials, caps combined output at 8 MiB and command execution at 30 minutes, kills process groups and removes only the validated import directory. Inspected every app command construction: shell-escaped arguments, encoded media IDs, finite numeric chapter ranges; the only caller-supplied child variable is the existing signed upload URL. No auth secret or access/refresh token is passed. This remains a trusted-command process shim, with cooperative step deadlines.
+3. **Workflow/SSE:** `selfhost/shims/workers.ts:47-82,89-128` implements retry limits/backoff and deadline propagation to fetch, Node HTTP(S) and sandbox commands; `selfhost/shims/bindings.ts:24,98-160` persists queued work before acknowledgement and limits workflows to three; `selfhost/shims/storage.ts:15-34,51-54` atomically stores progress and marks non-terminal records errored on boot. Last-Event-ID reattachment remains wired through `app/routes/api.import.$cardId.tsx:52-57` and stored-event replay in `workers/import-progress.ts:36-63`. `selfhost/server.ts:59-60,100-103` and `selfhost/response.ts:9-12` abort/cancel the upstream body on disconnect. The existing composite regression exercised retry exhaustion, process/HTTP deadlines, restart replay and stream cancellation successfully.
+4. **Cloudflare/tests:** content comparison confirms `workers/app.ts`, `wrangler.jsonc`, `vite.config.ts`, workflow/progress implementations and upstream `plan.md` unchanged. Default build still uses the original Cloudflare plugin stack/output. `vitest.config.ts:5-12` aliases workers to the shim; worker test changes remove only the old base-class mocks, retaining every assertion/test. `workers/import-workflow.test.ts` still supplies its existing fake step; the new composite test separately exercises the real WorkflowStep. Sandbox test changes retain assertions with the new isolated paths.
+5. **Docker/compose:** `Dockerfile.selfhost:13-31` installs the runtime/tools, copies build/dependencies only into the final image, uses USER node and healthchecks; `.dockerignore:1-10` excludes env files. `compose.yaml:1-36` publishes no ports, shares the sidecar namespace, persists Tailscale/progress/scratch state and sets both services to restart unless-stopped; `selfhost/tailscale/serve.json:2-8` proxies HTTPS with Funnel disabled. Multiarch image claims were not rerun in this review.
+
+Verification on this head, macOS Node v26.12.1 / npm 11.20.0:
+
+- `npm ci`: exit 0.
+- `npm run format`: exit 0 on committed PR content. Initial exit 1 was caused solely by dispatcher-created `.paseo-ops-rules.json` and its appended handoff launch block; both were preserved separately while checking the source handoff. No product file was edited.
+- `npm run lint`: exit 0.
+- `npm run typecheck:ci`: exit 0.
+- `npm test`: exit 0; **25 test files, 279 tests passed**, full suite run exactly once after 3951fcf.
+- `npm run build`: exit 0.
+- `npm run build:selfhost`: exit 0.
+- Built Node HTTP smoke: exit 0; health/origin/cookie assertions above. No competing test/build processes observed before/after verification. No new tests added.
+
+**CI unavailable:** GitHub API returned zero registered workflows, zero runs on the exact head and zero check runs; local results are not a CI pass. Live ts.net video/playlist imports, reload/restart, outside-tailnet denial and iOS installation remain open under the issue's explicit Teo-only prerequisites. The sidecar was not started and no accounts were touched. PR remains draft; no merge, ready transition or feature-branch write performed. Required post-primary adversarial decision is recorded separately in the review handoff.

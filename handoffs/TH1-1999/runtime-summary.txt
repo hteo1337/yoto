@@ -1,0 +1,10 @@
+{
+  "healthz": 200,
+  "login": 302,
+  "redirect_uri": "https://review.invalid/auth/callback",
+  "Secure": true,
+  "HttpOnly": true,
+  "SameSite": "Lax",
+  "spoofed_host_and_forwarded_headers_ignored": true,
+  "remote_oauth_requests": 0
+}

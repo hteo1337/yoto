@@ -1,0 +1,33 @@
+# TH1-1999 — Self-host Yoto Sync on Docker + Tailscale
+
+- Branch: hteo1337/th1-1999-self-host-yoto-sync-on-docker-tailscale; draft fork PR https://github.com/hteo1337/yoto/pull/1; Linear In Review, project Yoto Sync.
+- Done: docs/self-host.md steps 1–8 committed separately/in order; final SSE bridge cancels upstream on disconnect; Cloudflare workers/app.ts, wrangler.jsonc and upstream plan.md unchanged.
+- Verification: format/lint/typecheck:ci/build/build:selfhost exit0; full Vitest once at b616af1: 25 files/279 passed; after stream fix, scoped composite regression 1/1 passed (full suite not repeated under cap).
+- Verification: final OCI amd64+arm64 digest 09018229e23c93ed9970b88fda6904af394f34f84510df90450f9c6b79f96062; WSL amd64 build exit0, health200, UID1000, yt-dlp2026.10.26, ffmpeg5.1.9, supported Node22.23.4.
+- Next: lead dispatches primary latest-Sol review after writer stops (HTTP409 active-task admission); then Jev/semif and required/default-yes adversarial review. No review launched/verdict; see handoffs/TH1-1999/BLOCKED.md.
+- CI: GitHub reports zero registered workflows, no branch runs/PR checks; unverified, never green. PR remains draft; no merge or install performed.
+- Open: Teo Yoto client/callback and Tailscale HTTPS/auth key; real ts.net video/playlist/reload/restart/outside-tailnet and iOS installation checks remain unverified.
+- decided: primary host hteo-pc-wsl (amd64 WSL2/Docker29.9.2/systemd); Docker Desktop starts at Windows sign-in; sidecar never started. Temporary local/WSL artifacts cleaned; 12 older WSL cache records preserved.
+
+## New launch
+
+Task: PR-ready review: TH1-1999 self-host (hteo1337/yoto#1)
+Issue: https://linear.app/th1337/issue/TH1-1999/self-host-yoto-sync-on-docker-tailscale
+Branch: review/TH1-1999-945a9ef2ee5e
+Adopted branch: no
+Acceptance: Perform the single PR-ready review of draft PR https://github.com/hteo1337/yoto/pull/1 (branch hteo1337/th1-1999-self-host-yoto-sync-on-docker-tailscale, Linear TH1-1999), in your own separate worktree. Read-only on the feature branch: do not push commits to it.
+
+Read the Linear issue's acceptance criteria, docs/self-host.md, handoffs/STATUS.md and the full diff against main.
+
+Focus areas, in severity order:
+1. **Auth/cookies:** the PUBLIC_ORIGIN rewrite in selfhost/server.ts (it must not trust forwarded headers), the Secure cookie flag, and the OAuth redirect_uri.
+2. **Command execution in selfhost/shims/sandbox.ts:** shell injection, env leakage (no YOTO_AUTH_SECRET or tokens in the child env), timeouts, output caps, and path containment of per-sandbox dirs and destroy().
+3. **Workflow shim semantics:** step.do retries and timeouts, the p-limit concurrency limit, and that restart turns non-terminal imports into terminal errors. Also check that SSE reattach via Last-Event-ID works and that streams cancel on disconnect (3951fcf).
+4. **Cloudflare unaffected:** workers/app.ts, wrangler.jsonc and the Cloudflare build behaviour are unchanged. Also check the vitest alias change, and that the existing tests in workers/*.test.ts are not weakened (the vi.mock removals now run against the shims).
+5. **Dockerfile.selfhost and compose.yaml:** non-root user, no secrets baked in, no published host port, Tailscale state volume, `restart: unless-stopped`.
+
+Verification: run the full suite once on the PR head (the writer last ran the full suite before 3951fcf): `npm ci && npm run format && npm run lint && npm run typecheck:ci && npm test && npm run build && npm run build:selfhost`. Quote exit codes and test counts.
+
+Output: write review.txt and post exactly one PR comment starting with `Verdict: CONFIRMED` or `Verdict: BLOCKING`, with severity-ordered file:line findings and explicit "nothing found" areas. Do not merge, do not mark ready, do not start the Tailscale sidecar or touch accounts. GitHub Actions is not enabled on the fork, so CI is unavailable; do not report it as passing.
+Launch: branch=review/TH1-1999-945a9ef2ee5e, repo_path=/Users/hteo/Work/GitHub/PERSONAL/yoto, run_id=d59b387399f74e8993a0ec082b44406b, task_id=5f3ab5ef890e4a198d5d4fdd560e81ca, workspace_id=wks_649b130eae73b2ac
+Continuity launch ID: 5f3ab5ef890e4a198d5d4fdd560e81ca:d59b387399f74e8993a0ec082b44406b
