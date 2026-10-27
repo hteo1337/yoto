@@ -1,0 +1,2 @@
+CAP small=success oversized=failure retainedBytes=8388608 unhandledErrors=0
+STARTUP health=200 terminalError=true interruptedScratchSurvives=false replayPreserved=true outsideSentinel=keep
