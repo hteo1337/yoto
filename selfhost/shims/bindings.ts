@@ -8,7 +8,11 @@ import {ProgressStore} from "./storage"
 import {currentSignal, WorkflowStep} from "./workers"
 
 export function createBindings(
-    env: Pick<Env, "YOTO_CLIENT_ID" | "YOTO_AUTH_SECRET" | "RESEND_API_KEY">,
+    env: {
+        YOTO_CLIENT_ID: string
+        YOTO_AUTH_SECRET: string
+        RESEND_API_KEY: string
+    },
     directory: string,
 ): Env {
     const store = new ProgressStore(directory)
