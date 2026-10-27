@@ -56,4 +56,3 @@ stdout | app/lib/sandbox-isolation.test.ts > isolates imports and supports the s
       Tests  280 passed (280)
    Start at  22:11:14
    Duration  1.03s (transform 2.18s, setup 0ms, import 4.58s, tests 731ms, environment 2ms)
-

@@ -1,6 +1,6 @@
 # TH1-1999 — Self-host Yoto Sync on Docker + Tailscale
 - Review branch: review/TH1-1999-c134cf58f6ed; source branch hteo1337/th1-1999-self-host-yoto-sync-on-docker-tailscale unchanged at 0dc18555581305193fc76bc061d904e758ecbeb1; PR https://github.com/hteo1337/yoto/pull/1 remains draft.
-- Done: fresh latest-Sol scoped adversarial fix confirmation; both original findings confirmed fixed; one verdict https://github.com/hteo1337/yoto/pull/1#issuecomment-6452468969 (byte-matched review.txt).
+- Done: review evidence and handoff pushed to the review branch; fresh latest-Sol scoped adversarial fix confirmation; both original findings confirmed fixed; one verdict https://github.com/hteo1337/yoto/pull/1#issuecomment-6452468969 (byte-matched review.txt).
 - Verification: npm ci, npm test once (26 files/280 tests), build:selfhost, confirm-probe.mjs all exit 0; no competing tests before/after. Built boot health200, interrupted scratch removed, terminal replay/outside sentinel preserved; real cap bounded to 8388608 bytes without unhandled exception.
 - Edge repro: a.b.json with progress event throws Invalid sandbox ID on both unchanged 4a72f76 and 0dc1855, through read/filename before cleanup; pre-existing P2 malformed-local-state boot failure, not a new regression.
 - Next: lead consumes CONFIRMED and retains draft/live acceptance boundaries; dispatcher handles continuity comment. No merge, ready transition, feature-branch push, sidecar or account changes.

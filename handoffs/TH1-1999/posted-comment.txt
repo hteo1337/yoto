@@ -7,4 +7,3 @@ Scoped fix confirmation for TH1-1999 — Self-host Yoto Sync on Docker + Tailsca
 - Filename repro: write `a.b.json` containing `{"event":{"type":"progress"}}` into an isolated progress directory, then `new ProgressStore(directory)`. **Both 4a72f76 and 0dc1855 throw `Invalid sandbox ID`** through constructor → read → filename → sandboxDirectory, before the new cleanup call. The premise that baseline survived is incorrect. Pre-existing P2 boot failure for malformed local state; no new regression, hence no blocker.
 
 `npm test` ran once: **26 files / 280 tests passed**, exit 0; no competing test processes observed. `npm run build:selfhost` and scoped probe exited 0. Nothing else blocking found within the requested fixes. Repro/logs: `handoffs/TH1-1999/confirm-probe.{mjs,log}` on `review/TH1-1999-c134cf58f6ed`. CI unavailable (zero workflows/check runs), not passing. Feature branch unchanged; PR remains draft.
-
