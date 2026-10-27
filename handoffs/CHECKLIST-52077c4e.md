@@ -3,8 +3,8 @@
 PASEO_AGENT_ID is unset; suffix uses verified dispatch run 52077c4e0180434287cb3ce64921af2d from STATUS.
 
 - [x] Step 1: isolate scratch paths; one regression demonstrates disjoint ids and fails on old code.
-- [ ] Step 2 (in progress): bounded Node shims run workflow/progress logic, retries, timeouts and restart recovery.
-- [ ] Step 3: Node entry rewrites origin, validates env and serves health/static/SSR.
+- [x] Step 2: bounded Node shims run workflow/progress logic, retries, timeouts and restart recovery.
+- [ ] Step 3 (in progress): Node entry rewrites origin, validates env and serves health/static/SSR.
 - [ ] Step 4: both build configurations and CI wiring verified.
 - [ ] Step 5: non-root multiarch image builds and tools/health run.
 - [ ] Step 6: private Tailscale compose config validates.

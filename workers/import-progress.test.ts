@@ -3,16 +3,6 @@ import {describe, expect, it, vi} from "vitest"
 import type {ImportProgress as ImportProgressState} from "~/lib/import-utils"
 import {createMockEnv} from "~/tests/mocks"
 
-vi.mock("cloudflare:workers", () => ({
-    DurableObject: class {
-        protected ctx: DurableObjectState
-
-        constructor(ctx: DurableObjectState) {
-            this.ctx = ctx
-        }
-    },
-}))
-
 import {ImportProgress} from "./import-progress"
 
 const createProgress = () => {

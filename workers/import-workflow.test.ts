@@ -31,10 +31,6 @@ const {MockCardCapacityError} = vi.hoisted(() => ({
     },
 }))
 
-vi.mock("cloudflare:workers", () => ({
-    WorkflowEntrypoint: class {},
-}))
-
 vi.mock("~/lib/auth.server", () => ({
     getYotoSdk: (...args: unknown[]) => mockGetYotoSdk(...args),
 }))
