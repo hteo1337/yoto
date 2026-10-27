@@ -25,6 +25,8 @@ import {Toaster} from "~/components/ui/sonner"
 
 export const links = () => [
     {rel: "icon", type: "image/png", href: "/favicon.png"},
+    {rel: "manifest", href: "/manifest.webmanifest"},
+    {rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png"},
     {rel: "preconnect", href: "https://fonts.googleapis.com"},
     {
         rel: "preconnect",
@@ -92,6 +94,13 @@ export function Layout({children}: {children: React.ReactNode}) {
                     name="viewport"
                     content="width=device-width, initial-scale=1"
                 />
+                <meta name="theme-color" content="#ffffff" />
+                <meta name="apple-mobile-web-app-capable" content="yes" />
+                <meta
+                    name="apple-mobile-web-app-status-bar-style"
+                    content="default"
+                />
+                <meta name="apple-mobile-web-app-title" content="Yoto Sync" />
                 <Meta />
                 <Links />
             </head>

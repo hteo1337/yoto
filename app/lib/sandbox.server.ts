@@ -207,6 +207,13 @@ async function getPlaylistInfo(
     }
 }
 
+function workingDirectory(sandboxId: string): string {
+    if (!/^[a-zA-Z0-9_-]+$/.test(sandboxId)) {
+        throw new Error("Invalid sandbox ID")
+    }
+    return `/tmp/yoto/${sandboxId}`
+}
+
 // Download a video's audio and leave it in the sandbox
 async function downloadVideo(
     env: Env,
@@ -215,8 +222,9 @@ async function downloadVideo(
 ): Promise<DownloadedAudio> {
     const startedAt = Date.now()
     const sandbox = getSandbox(env.SANDBOX, sandboxId)
-    const filename = `${video.id}.m4a`
-    const path = `/tmp/${filename}`
+    const filename = `${encodeURIComponent(video.id)}.m4a`
+    const directory = workingDirectory(sandboxId)
+    const path = `${directory}/${filename}`
     const contentType = "audio/mp4"
     const escapedPath = escapeShellArg(path)
     const input = `--no-playlist ${escapeShellArg(video.url)}`
@@ -229,7 +237,7 @@ async function downloadVideo(
 
     try {
         const downloadResult = await sandbox.exec(
-            `yt-dlp --no-check-certificates ` +
+            `mkdir -p ${escapeShellArg(directory)} && yt-dlp --no-check-certificates ` +
                 `--format 'bestaudio[ext=m4a]' ` +
                 `-o ${escapedPath} ${input}`,
         )
@@ -277,7 +285,7 @@ async function splitAudio(
         }
 
         const audio = {
-            path: `/tmp/${track.id}.m4a`,
+            path: `${workingDirectory(sandboxId)}/${encodeURIComponent(track.id)}.m4a`,
             filename: `${track.id}.m4a`,
             contentType: source.contentType,
         }

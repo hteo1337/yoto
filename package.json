@@ -32,15 +32,19 @@
         "test:watch": "vitest",
         "typecheck": "react-router typegen && wrangler types && tsc",
         "typecheck:ci": "react-router typegen && tsc",
-        "typegen": "react-router typegen && wrangler types"
+        "typegen": "react-router typegen && wrangler types",
+        "build:selfhost": "YOTO_SELFHOST=1 react-router build --config vite.selfhost.config.ts",
+        "start:selfhost": "node build-selfhost/server/index.js"
     },
     "dependencies": {
         "@cloudflare/sandbox": "0.10.3",
         "@react-email/render": "^2.0.5",
         "@react-router/cloudflare": "7.12.0",
+        "@react-router/node": "^7.12.0",
         "@yotoplay/yoto-sdk": "^1.2.0",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
+        "express": "^5.3.0",
         "isbot": "^5.1.31",
         "lucide-react": "^0.563.0",
         "motion": "^12.31.0",
@@ -61,6 +65,7 @@
         "@cloudflare/vite-plugin": "^1.33.0",
         "@react-router/dev": "7.12.0",
         "@tailwindcss/vite": "^4.1.13",
+        "@types/express": "^5.0.6",
         "@types/node": "^22",
         "@types/react": "^19.2.7",
         "@types/react-dom": "^19.2.3",

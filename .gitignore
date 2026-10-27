@@ -10,9 +10,14 @@ build/
 
 # env
 .env
+.env.*
+!.env.example
 
 # React Router
 .react-router
 
 # Cloudflare
 .wrangler
+
+# Self-host build output
+build-selfhost/

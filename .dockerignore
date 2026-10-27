@@ -1,0 +1,10 @@
+.git
+.env
+.env.*
+node_modules
+build
+build-selfhost
+.react-router
+.wrangler
+handoffs
+*.log
