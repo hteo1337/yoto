@@ -5,9 +5,9 @@ PASEO_AGENT_ID is unset; suffix uses verified dispatch run 52077c4e0180434287cb3
 - [x] Step 1: isolate scratch paths; one regression demonstrates disjoint ids and fails on old code.
 - [x] Step 2: bounded Node shims run workflow/progress logic, retries, timeouts and restart recovery.
 - [x] Step 3: Node entry rewrites origin, validates env and serves health/static/SSR.
-- [ ] Step 4 (in progress): both build configurations and CI wiring verified.
-- [ ] Step 5: non-root multiarch image builds and tools/health run.
-- [ ] Step 6: private Tailscale compose config validates.
+- [x] Step 4: both build configurations and CI wiring verified.
+- [x] Step 5: non-root multiarch image builds and tools/health run.
+- [ ] Step 6 (in progress): private Tailscale compose config validates.
 - [ ] Step 7: manifest and icon served with install metadata.
 - [ ] Step 8: README and CLAUDE document tested commands and prerequisites.
 - [ ] Required local gates recorded with exact results; external ts.net checks left explicitly open.
