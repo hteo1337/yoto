@@ -11,4 +11,6 @@ PASEO_AGENT_ID is unset; suffix uses verified dispatch run 52077c4e0180434287cb3
 - [x] Step 7: manifest and icon served with install metadata.
 - [x] Step 8: README and CLAUDE document tested commands and prerequisites.
 - [x] Required local gates recorded with exact results; external ts.net checks left explicitly open.
-- [ ] Draft fork PR (in progress) linked to issue; required reviews inspected or concrete blocker recorded; handoff committed and pushed.
+- [x] Draft fork PR linked to issue; required reviews inspected or concrete blocker recorded; handoff committed and pushed.
+
+- [x] Cleanup: remove temporary local/WSL containers, images, task cache and generated output while preserving pre-existing artifacts.
