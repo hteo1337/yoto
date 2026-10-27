@@ -4,4 +4,4 @@ PASEO_AGENT_ID is unset (checked); suffix is verified dispatcher agent 234a2ba1-
 - [x] Inspect attack surfaces; one composite probe: auth/path/shell/output/scheduler/deadline controls passed; built-server recovery left interrupted scratch. Cap also raised macOS-only uncaught EPERM; Linux impact unverified. Evidence in adversarial-repro.log.
 - [x] Run npm test exactly once: 25 files / 279 tests passed, exit 0; no competing test process before/after. Fork CI unavailable, not passing.
 - [x] Write and inspect review.txt; post exactly one BLOCKING [adversarial] comment (6452163581); API body byte-matches artifact and count=1.
-- [ ] Update issue-scoped blocker/legacy STATUS, commit and push reviewer artifacts only; preserve feature head/draft state.
+- [x] Update issue-scoped blocker/legacy STATUS; reviewer artifacts pushed as 2d1c5ca (ls-remote verified), feature head stays 4a72f760 and PR draft=true. Product diff unchanged; dependencies/build/scratch cleaned; Linear review outcome updated.

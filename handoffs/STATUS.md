@@ -5,6 +5,6 @@
 - Finding: startup marks imports interrupted but permanently retains persistent scratch; recovery repro failed. Additional uncaught kill EPERM observed on macOS; Linux impact unverified.
 - Verification: npm ci/build:selfhost exit0; npm test exactly once, 25 files/279 passed; composite adversarial test once, 1 failed cleanup assertion + 1 unhandled EPERM; separate parent/child env control exit0.
 - Evidence: handoffs/TH1-1999/{adversarial.test.ts,adversarial-repro.log,npm-test-adversarial.log,build-selfhost-adversarial.log,env-control.mjs,env-control.log,comment-receipt.json}; initial dirty dispatcher handoff preserved in dispatch-launch.txt.
-- Next: author fixes blocking scratch reclamation; same adversarial reviewer confirms only that fix. Blocker in handoffs/TH1-1999/BLOCKED.md. Product source/feature head unchanged; review artifacts only on reviewer branch.
+- Next: author fixes blocking scratch reclamation; same adversarial reviewer confirms only that fix. Blocker in handoffs/TH1-1999/BLOCKED.md. Product source/feature head unchanged; review artifacts pushed only to reviewer branch and review outcome recorded on Linear.
 - CI unavailable: zero workflows/checks; never green. Open: real ts.net imports/reload/restart/outside-tailnet and iOS checks need Teo prerequisites; no sidecar/accounts/merge/ready transition.
 - decided: Jev yes (0.995), security/concurrency/installers/restarts; bounded one composite regression plus narrow env control; temporary dependencies/build/scratch artifacts cleaned before reviewer-branch push.
