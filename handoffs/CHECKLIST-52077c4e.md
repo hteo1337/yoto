@@ -9,6 +9,6 @@ PASEO_AGENT_ID is unset; suffix uses verified dispatch run 52077c4e0180434287cb3
 - [x] Step 5: non-root multiarch image builds and tools/health run.
 - [x] Step 6: private Tailscale compose config validates.
 - [x] Step 7: manifest and icon served with install metadata.
-- [ ] Step 8 (in progress): README and CLAUDE document tested commands and prerequisites.
-- [ ] Required local gates recorded with exact results; external ts.net checks left explicitly open.
+- [x] Step 8: README and CLAUDE document tested commands and prerequisites.
+- [ ] Required local gates (in progress) recorded with exact results; external ts.net checks left explicitly open.
 - [ ] Draft fork PR linked to issue; required reviews inspected or concrete blocker recorded; handoff committed and pushed.

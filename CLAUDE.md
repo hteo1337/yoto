@@ -10,6 +10,8 @@ Yoto Sync: a React Router v7 (framework mode, SSR) app that imports audio from Y
 npm run dev            # vite dev on http://localhost:3000 (needs Docker running for the Sandbox container)
 npm run build          # react-router build
 npm run deploy         # build + wrangler deploy
+npm run build:selfhost # separate Node SSR/client build to build-selfhost/
+npm run start:selfhost # Node server (requires PUBLIC_ORIGIN and app env vars)
 npm test               # vitest run
 npx vitest run app/lib/youtube.test.ts        # single file
 npx vitest run -t "name of test"              # single test by name
@@ -40,6 +42,10 @@ Secrets for local dev: copy `.env.example` to `.env` (`YOTO_AUTH_SECRET`, `RESEN
 
 Pure helpers shared by client and server sit in non-`.server` modules (`import.ts`, `youtube.ts`, `card-utils.ts`); anything touching env, secrets or the SDK is `*.server.ts`.
 
+**Self-host.** `vite.selfhost.config.ts` omits the Cloudflare plugin and aliases the two Cloudflare modules to `selfhost/shims/`. `selfhost/server.ts` serves static assets and SSR in one bundle, sets the same `cloudflareContext`, and rewrites URLs to `PUBLIC_ORIGIN` (never forwarded headers). The workers shim also exports module-level `env` for existing auth helpers. JSON progress storage is atomic per import, single-process only; queued/in-flight records become terminal errors on boot. `p-limit(3)` caps workflow execution. Step deadlines abort fetch, Node HTTP(S) requests (the Yoto SDK uses Axios), and sandbox process groups. These are cooperative I/O deadlines, not isolation for arbitrary JavaScript. Never refactor routes/lib just to accommodate this target.
+
+**Deployment.** Primary host: `hteo-pc-wsl`, amd64 WSL2 with systemd and Docker Desktop 29.9.2. Enable Docker Desktop at Windows sign-in and its WSL integration. `compose.yaml` uses two `unless-stopped` services, named Tailscale state/progress/scratch volumes, userspace Tailscale Serve and no published ports. The sidecar is a separate tailnet identity. Do not start it without Teo's auth key or register clients/change accounts. Real ts.net/iOS checks remain Teo-dependent. See README for setup.
+
 **Other pieces.** Icon search (`api/icons`) combines official Yoto icons and yotoicons.com scraping (`yoto-icons.server.ts`, `yotoicons-community.server.ts`). Feedback emails go through Resend with a react-email template (`FeedbackEmail.tsx`). UI is shadcn/ui (`app/components/ui/`, add via shadcn CLI per `components.json`) + Tailwind v4.
 
 ## Conventions
@@ -48,4 +54,4 @@ Pure helpers shared by client and server sit in non-`.server` modules (`import.t
 - Validation: route input is validated with Zod schemas in `app/schemas/` via `app/lib/validation.server.ts`. Migrating the remaining route actions to Zod is the open item in `plan.md`.
 - Tests are colocated `*.test.ts(x)` with vitest globals; build fake bindings with `createMockEnv` from `app/tests/mocks.ts`.
 - Path alias `~/` → `app/`. Prettier config is in `.prettierrc` (4-space indent, no semicolons).
-- `Dockerfile` (node image, `npm run start`) is a leftover from the React Router template and does not work: there is no `start` script and the build output is a Worker bundle. Only `Dockerfile.sandbox` is used.
+- `Dockerfile.selfhost` is the non-root multiarch Node image (yt-dlp with Node runtime + Debian ffmpeg). The dead root `Dockerfile` was removed. `Dockerfile.sandbox` remains exclusively the Cloudflare container image.

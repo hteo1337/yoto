@@ -5,9 +5,12 @@ over the tailnet at `https://<host>.<tailnet>.ts.net`, with no Cloudflare
 account. The Cloudflare deployment keeps working unchanged, and upstream
 (`bradgarropy/yoto`) changes keep merging with few conflicts.
 
-Status: plan only, nothing implemented. Implementation needs a TH1337 issue
-and a branch containing its key; it touches auth and installers, so it runs
-as a Sol lane through the dispatcher.
+Status: implemented on TH1-1999's feature branch; local and container gates
+are recorded in `handoffs/STATUS.md`. Real ts.net/iOS acceptance remains open
+until Teo supplies the Yoto client and Tailscale HTTPS/auth prerequisites.
+Primary deployment target: **hteo-pc-wsl**, amd64 WSL2 with systemd and Docker
+Desktop 29.9.2. Docker Desktop must start at Windows sign-in for containers
+to resume after Windows reboots. Multiarch builds also cover arm64.
 
 ## Why self-host
 
@@ -47,7 +50,7 @@ A separate Vite config for the Node build aliases `cloudflare:workers` and
    `https://<host>.<tailnet>.ts.net/auth/callback` as an allowed callback URL.
 2. Enable MagicDNS and HTTPS certificates for the tailnet, and create a
    tagged, reusable Tailscale auth key if the sidecar option is used.
-3. Pick the host (Mac mini, NAS, Linux box) and note its CPU architecture.
+3. Host decided: hteo-pc-wsl (x86_64). Enable Docker Desktop at Windows sign-in and WSL integration. The sidecar gets its own tailnet identity; use its actual HTTPS origin.
 
 Secrets (`YOTO_AUTH_SECRET`, `RESEND_API_KEY`, `TS_AUTHKEY`) live in an
 untracked `.env` next to `compose.yaml`; nothing secret is committed.
@@ -135,12 +138,13 @@ collide.
 ### 6. Tailscale and compose (`compose.yaml`)
 
 - Recommended: a `tailscale/tailscale` sidecar with `TS_AUTHKEY`, a persistent
-  state volume, and `TS_SERVE_CONFIG` proxying HTTPS 443 to `app:3000`. The app
+  state volume, and `TS_SERVE_CONFIG` proxying HTTPS 443 to `127.0.0.1:3000`. The app
   container shares the sidecar's network namespace and publishes no host port.
 - Alternative: run the app with `127.0.0.1:3000` published and
   `tailscale serve --bg 3000` on the host.
 - Volumes: progress store and `/tmp/yoto` scratch space. Restart policy
   `unless-stopped`.
+- Keep Tailscale state in a named volume; both services use `restart: unless-stopped`. Do not start the sidecar without Teo’s auth key.
 - Acceptance: the app is reachable at the ts.net URL from a tailnet device,
   and not reachable from the LAN or the public internet.
 
