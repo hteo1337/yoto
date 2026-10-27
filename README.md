@@ -56,6 +56,11 @@ In Docker Desktop settings, enable **Start Docker Desktop when you sign in
 to your computer**. After a Windows reboot, containers resume when Docker
 Desktop starts at sign-in; this does not provide service before sign-in.
 
+When building over SSH, if Docker reports that `docker-credential-desktop.exe`
+is missing, include Docker Desktop's helper directory for that command:
+`PATH="$PATH:/mnt/c/Program Files/Docker/Docker/resources/bin" docker compose up -d --build`.
+This uses the existing Docker Desktop helper; no credential files need copying.
+
 Before starting, Teo must register an own Yoto developer client, enable
 MagicDNS/HTTPS on the tailnet, and supply a tagged reusable Tailscale auth
 key. Register exactly `https://<sidecar-host>.<tailnet>.ts.net/auth/callback`.
