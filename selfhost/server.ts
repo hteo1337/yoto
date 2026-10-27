@@ -1,14 +1,12 @@
 import {resolve} from "node:path"
 
-import {
-    createReadableStreamFromReadable,
-    writeReadableStreamToWritable,
-} from "@react-router/node"
+import {createReadableStreamFromReadable} from "@react-router/node"
 import express from "express"
 import {createRequestHandler, RouterContextProvider} from "react-router"
 
 import {cloudflareContext} from "../app/lib/cloudflare-context"
 import {logger} from "../app/lib/logger.server"
+import {forwardBody} from "./response"
 import {createBindings} from "./shims/bindings"
 import {installFetchDeadline} from "./shims/workers"
 
@@ -100,8 +98,11 @@ app.use(async (incoming, outgoing) => {
         const cookies = response.headers.getSetCookie()
         if (cookies.length) outgoing.setHeader("Set-Cookie", cookies)
         if (response.body && incoming.method !== "HEAD") {
-            await writeReadableStreamToWritable(response.body, outgoing)
-        } else outgoing.end()
+            await forwardBody(response.body, outgoing)
+        } else {
+            await response.body?.cancel()
+            outgoing.end()
+        }
     } catch {
         if (!abort.signal.aborted) {
             logger.error({message: "selfhost.request.failed"})

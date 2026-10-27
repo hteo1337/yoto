@@ -2,11 +2,13 @@ import {mkdtemp, rm} from "node:fs/promises"
 import http from "node:http"
 import {tmpdir} from "node:os"
 import {join} from "node:path"
+import {Writable} from "node:stream"
 
 import {expect, it, vi} from "vitest"
 
 import {createMockEnv} from "~/tests/mocks"
 
+import {forwardBody} from "../../selfhost/response"
 import {createBindings} from "../../selfhost/shims/bindings"
 import {getSandbox as nodeSandbox} from "../../selfhost/shims/sandbox"
 import {ProgressStore} from "../../selfhost/shims/storage"
@@ -92,6 +94,23 @@ it("isolates imports and supports the self-host runtime contract", async () => {
         upstream.closeAllConnections()
         await new Promise<void>(resolve => upstream.close(() => resolve()))
     }
+    let cancelled = false
+    const body = new ReadableStream<Uint8Array>({
+        start(controller) {
+            controller.enqueue(new TextEncoder().encode("SSE event"))
+        },
+        cancel() {
+            cancelled = true
+        },
+    })
+    const disconnected = new Writable({
+        write(_chunk, _encoding, callback) {
+            callback()
+            this.destroy()
+        },
+    })
+    await expect(forwardBody(body, disconnected)).rejects.toThrow()
+    expect(cancelled).toBe(true)
     const directory = await mkdtemp(join(tmpdir(), "yoto-progress-"))
     try {
         const bindings = createBindings(createMockEnv(), directory)

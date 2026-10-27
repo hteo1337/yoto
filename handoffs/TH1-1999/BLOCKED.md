@@ -1,0 +1,1 @@
+TH1-1999: PR-ready review admission rejected HTTP409 while writer task f65c08e96d6941f781436ae8e5027c5b is active; lead must dispatch primary latest-Sol review after writer stops, then Jev/semif decision and required adversarial review; real ts.net/iOS checks still need Teo’s Yoto client and Tailscale prerequisites.

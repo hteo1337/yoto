@@ -5,7 +5,7 @@
 - Verification: format/lint/typecheck:ci/test/build/build:selfhost exit0; Vitest 25 files, 279 tests. Format normalized ignored local Paseo JSON only.
 - Verification: final-source OCI amd64+arm64 built exit0; arm64 container UID1000, health200, yt-dlp2026.10.26, ffmpeg5.1.9, supported Node22.23.4.
 - Verification: local OAuth origin/Secure cookie ignores forged proxy headers; headless Chrome install metadata/icons pass; compose config exit0.
-- Next: draft fork PR and required latest-Sol reviews; optional amd64 WSL build in progress (transient Windows helper PATH fixed for this command only).
+- PR: https://github.com/hteo1337/yoto/pull/1 (draft, fork main); primary review launch HTTP409 because writer active; see handoffs/TH1-1999/BLOCKED.md.
 - Open: Teo Yoto client/callback and Tailscale HTTPS/auth key; real ts.net video/playlist/reload/restart/outside-tailnet and iOS install checks unverified.
 - decided: hteo-pc-wsl primary amd64 target (SSH verified Docker29.9.2/systemd); Docker Desktop at sign-in; sidecar never started.
-- decided: legacy handoff retained; Cloudflare workers/app.ts, wrangler.jsonc and upstream plan.md unchanged; no account mutations.
+- Next: finish optional WSL smoke/cleanup, push stop handoff; lead dispatches primary review after worker stops, then adversarial decision/review. Legacy handoff retained; Cloudflare workers/app.ts, wrangler.jsonc and upstream plan.md unchanged; no account mutations.
