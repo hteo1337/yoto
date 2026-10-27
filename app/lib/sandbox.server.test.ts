@@ -53,7 +53,7 @@ const sourceTrack = {
 }
 
 const downloadedAudio = {
-    path: "/tmp/video-1.m4a",
+    path: "/tmp/yoto/import-test-job/video-1.m4a",
     filename: "video-1.m4a",
     contentType: "audio/mp4",
 }
@@ -111,13 +111,13 @@ describe("downloadVideo", () => {
         const result = await downloadVideo(mockEnv, sandboxId, sourceTrack)
 
         expect(result).toEqual({
-            path: "/tmp/video-1.m4a",
+            path: "/tmp/yoto/import-test-job/video-1.m4a",
             filename: "video-1.m4a",
             contentType: "audio/mp4",
         })
         expect(mockExec).toHaveBeenNthCalledWith(
             1,
-            "rm -f '/tmp/video-1.m4a' '/tmp/video-1.m4a'.part",
+            "rm -f '/tmp/yoto/import-test-job/video-1.m4a' '/tmp/yoto/import-test-job/video-1.m4a'.part",
         )
         expect(mockExec).toHaveBeenNthCalledWith(
             2,
@@ -147,7 +147,7 @@ describe("downloadVideo", () => {
             downloadVideo(mockEnv, sandboxId, sourceTrack),
         ).rejects.toThrow("Failed to download Test Track: download failed")
         expect(mockExec).toHaveBeenLastCalledWith(
-            "rm -f '/tmp/video-1.m4a' '/tmp/video-1.m4a'.part",
+            "rm -f '/tmp/yoto/import-test-job/video-1.m4a' '/tmp/yoto/import-test-job/video-1.m4a'.part",
         )
     })
 })
@@ -186,12 +186,12 @@ describe("splitAudio", () => {
 
         expect(result).toEqual([
             {
-                path: "/tmp/video-1-01.m4a",
+                path: "/tmp/yoto/import-test-job/video-1-01.m4a",
                 filename: "video-1-01.m4a",
                 contentType: "audio/mp4",
             },
             {
-                path: "/tmp/video-1-02.m4a",
+                path: "/tmp/yoto/import-test-job/video-1-02.m4a",
                 filename: "video-1-02.m4a",
                 contentType: "audio/mp4",
             },
@@ -199,7 +199,7 @@ describe("splitAudio", () => {
         expect(mockExec).toHaveBeenCalledTimes(1)
         expect(mockExec).toHaveBeenCalledWith(
             expect.stringMatching(
-                /rm -f '\/tmp\/video-1-01\.m4a' '\/tmp\/video-1-02\.m4a'.+ffmpeg.+-ss 0.+video-1-01\.m4a.+ffmpeg.+-ss 60.+video-1-02\.m4a/s,
+                /rm -f '\/tmp\/yoto\/import-test-job\/video-1-01\.m4a' '\/tmp\/yoto\/import-test-job\/video-1-02\.m4a'.+ffmpeg.+-ss 0.+video-1-01\.m4a.+ffmpeg.+-ss 60.+video-1-02\.m4a/s,
             ),
         )
         expect(mockExec).toHaveBeenCalledWith(
@@ -238,7 +238,7 @@ describe("splitAudio", () => {
 
         expect(mockExec).toHaveBeenNthCalledWith(
             2,
-            "rm -f '/tmp/video-1-01.m4a' '/tmp/video-1-02.m4a'",
+            "rm -f '/tmp/yoto/import-test-job/video-1-01.m4a' '/tmp/yoto/import-test-job/video-1-02.m4a'",
         )
     })
 
@@ -284,7 +284,7 @@ describe("prepareAudio", () => {
         expect(mockExec).toHaveBeenCalledTimes(1)
         expect(mockExec).toHaveBeenCalledWith(
             expect.stringMatching(
-                /stat.+ffprobe.+sha256sum.+\/tmp\/video-1\.m4a/s,
+                /stat.+ffprobe.+sha256sum.+\/tmp\/yoto\/import-test-job\/video-1\.m4a/s,
             ),
         )
         expect(mockExec).toHaveBeenCalledWith(
@@ -314,7 +314,9 @@ describe("prepareAudio", () => {
                 sourceTrack.title,
             ),
         ).rejects.toThrow("Failed to measure Test Track: invalid size")
-        expect(mockExec).toHaveBeenLastCalledWith("rm -f '/tmp/video-1.m4a'")
+        expect(mockExec).toHaveBeenLastCalledWith(
+            "rm -f '/tmp/yoto/import-test-job/video-1.m4a'",
+        )
     })
 
     it("identifies the track when a metadata command fails", async () => {
@@ -335,7 +337,9 @@ describe("prepareAudio", () => {
                 sourceTrack.title,
             ),
         ).rejects.toThrow("Failed to measure Test Track: stat failed")
-        expect(mockExec).toHaveBeenLastCalledWith("rm -f '/tmp/video-1.m4a'")
+        expect(mockExec).toHaveBeenLastCalledWith(
+            "rm -f '/tmp/yoto/import-test-job/video-1.m4a'",
+        )
     })
 })
 
@@ -366,7 +370,7 @@ describe("prepareTrack", () => {
         expect(mockGetSandbox).toHaveBeenCalledWith(mockEnv.SANDBOX, sandboxId)
         expect(mockExec).toHaveBeenNthCalledWith(
             1,
-            "rm -f '/tmp/video-1.m4a' '/tmp/video-1.m4a'.part",
+            "rm -f '/tmp/yoto/import-test-job/video-1.m4a' '/tmp/yoto/import-test-job/video-1.m4a'.part",
         )
         expect(mockExec).toHaveBeenNthCalledWith(
             2,
@@ -375,7 +379,7 @@ describe("prepareTrack", () => {
         expect(mockExec).toHaveBeenNthCalledWith(
             3,
             expect.stringMatching(
-                /stat.+ffprobe.+sha256sum.+\/tmp\/video-1\.m4a/s,
+                /stat.+ffprobe.+sha256sum.+\/tmp\/yoto\/import-test-job\/video-1\.m4a/s,
             ),
         )
     })
@@ -394,7 +398,7 @@ describe("prepareTrack", () => {
             prepareTrack(mockEnv, sandboxId, sourceTrack),
         ).rejects.toThrow("Failed to download Test Track: download failed")
         expect(mockExec).toHaveBeenLastCalledWith(
-            "rm -f '/tmp/video-1.m4a' '/tmp/video-1.m4a'.part",
+            "rm -f '/tmp/yoto/import-test-job/video-1.m4a' '/tmp/yoto/import-test-job/video-1.m4a'.part",
         )
     })
 
@@ -410,7 +414,9 @@ describe("prepareTrack", () => {
         await expect(
             prepareTrack(mockEnv, sandboxId, sourceTrack),
         ).rejects.toThrow("Failed to hash Test Track: invalid SHA-256")
-        expect(mockExec).toHaveBeenLastCalledWith("rm -f '/tmp/video-1.m4a'")
+        expect(mockExec).toHaveBeenLastCalledWith(
+            "rm -f '/tmp/yoto/import-test-job/video-1.m4a'",
+        )
     })
 
     it("rejects tracks longer than Yoto's limit", async () => {
@@ -432,7 +438,9 @@ describe("prepareTrack", () => {
         ).rejects.toThrow(
             "Test Track is too long for Yoto. Tracks must be 60 minutes or shorter.",
         )
-        expect(mockExec).toHaveBeenLastCalledWith("rm -f '/tmp/video-1.m4a'")
+        expect(mockExec).toHaveBeenLastCalledWith(
+            "rm -f '/tmp/yoto/import-test-job/video-1.m4a'",
+        )
     })
 
     it("rejects tracks larger than Yoto's limit", async () => {
@@ -454,7 +462,9 @@ describe("prepareTrack", () => {
         ).rejects.toThrow(
             "Test Track is too large for Yoto. Tracks must be 100 MB or smaller.",
         )
-        expect(mockExec).toHaveBeenLastCalledWith("rm -f '/tmp/video-1.m4a'")
+        expect(mockExec).toHaveBeenLastCalledWith(
+            "rm -f '/tmp/yoto/import-test-job/video-1.m4a'",
+        )
     })
 
     it("reports both limits when a track exceeds both", async () => {
@@ -476,7 +486,9 @@ describe("prepareTrack", () => {
         ).rejects.toThrow(
             "Test Track is too long and too large for Yoto. Tracks must be 60 minutes or shorter and 100 MB or smaller.",
         )
-        expect(mockExec).toHaveBeenLastCalledWith("rm -f '/tmp/video-1.m4a'")
+        expect(mockExec).toHaveBeenLastCalledWith(
+            "rm -f '/tmp/yoto/import-test-job/video-1.m4a'",
+        )
     })
 })
 
@@ -529,14 +541,14 @@ describe("prepareTracks", () => {
 
         expect(result).toEqual([
             {
-                path: "/tmp/video-1-01.m4a",
+                path: "/tmp/yoto/import-test-job/video-1-01.m4a",
                 filename: "video-1-01.m4a",
                 contentType: "audio/mp4",
                 sha256: "a".repeat(64),
                 byteLength: 123456,
             },
             {
-                path: "/tmp/video-1-02.m4a",
+                path: "/tmp/yoto/import-test-job/video-1-02.m4a",
                 filename: "video-1-02.m4a",
                 contentType: "audio/mp4",
                 sha256: "a".repeat(64),
@@ -558,7 +570,9 @@ describe("prepareTracks", () => {
         expect(commands.find(command => command.includes("stat -c"))).toMatch(
             /video-1-01\.m4a.+video-1-02\.m4a/s,
         )
-        expect(commands.at(-1)).toBe("rm -f '/tmp/video-1.m4a'")
+        expect(commands.at(-1)).toBe(
+            "rm -f '/tmp/yoto/import-test-job/video-1.m4a'",
+        )
     })
 
     it("uses the existing whole-video preparation path", async () => {
@@ -627,9 +641,15 @@ describe("prepareTracks", () => {
         ).rejects.toThrow("Failed to measure Chapter Two: invalid size")
 
         const commands = mockExec.mock.calls.map(([command]) => command)
-        expect(commands).toContain("rm -f '/tmp/video-1.m4a'")
-        expect(commands).toContain("rm -f '/tmp/video-1-01.m4a'")
-        expect(commands).toContain("rm -f '/tmp/video-1-02.m4a'")
+        expect(commands).toContain(
+            "rm -f '/tmp/yoto/import-test-job/video-1.m4a'",
+        )
+        expect(commands).toContain(
+            "rm -f '/tmp/yoto/import-test-job/video-1-01.m4a'",
+        )
+        expect(commands).toContain(
+            "rm -f '/tmp/yoto/import-test-job/video-1-02.m4a'",
+        )
     })
 
     it("removes every file when batch metadata is incomplete", async () => {
@@ -652,9 +672,15 @@ describe("prepareTracks", () => {
         ).rejects.toThrow("Failed to prepare audio: incomplete metadata")
 
         const commands = mockExec.mock.calls.map(([command]) => command)
-        expect(commands).toContain("rm -f '/tmp/video-1.m4a'")
-        expect(commands).toContain("rm -f '/tmp/video-1-01.m4a'")
-        expect(commands).toContain("rm -f '/tmp/video-1-02.m4a'")
+        expect(commands).toContain(
+            "rm -f '/tmp/yoto/import-test-job/video-1.m4a'",
+        )
+        expect(commands).toContain(
+            "rm -f '/tmp/yoto/import-test-job/video-1-01.m4a'",
+        )
+        expect(commands).toContain(
+            "rm -f '/tmp/yoto/import-test-job/video-1-02.m4a'",
+        )
     })
 })
 
@@ -741,7 +767,9 @@ describe("uploadTrack", () => {
         const [command, options] = mockExec.mock.calls[0]
         expect(command).toContain("curl --fail --silent --show-error")
         expect(command).toContain("--header 'Content-Type: audio/mp4'")
-        expect(command).toContain("--upload-file '/tmp/video-1.m4a'")
+        expect(command).toContain(
+            "--upload-file '/tmp/yoto/import-test-job/video-1.m4a'",
+        )
         expect(command).toContain('"$YOTO_UPLOAD_URL"')
         expect(command).not.toContain(uploadUrl)
         expect(options).toEqual({env: {YOTO_UPLOAD_URL: uploadUrl}})
@@ -785,7 +813,9 @@ describe("removeTrack", () => {
 
         await removeTrack(mockEnv, sandboxId, track)
 
-        expect(mockExec).toHaveBeenCalledWith("rm -f '/tmp/video-1.m4a'")
+        expect(mockExec).toHaveBeenCalledWith(
+            "rm -f '/tmp/yoto/import-test-job/video-1.m4a'",
+        )
     })
 })
 
