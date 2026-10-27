@@ -1,0 +1,13 @@
+PROBE startup: health=200 terminalError=true interruptedScratchSurvives=false completeReplayUnchanged=true errorReplayUnchanged=true outsideSentinelPreserved=true
+PROBE cap: small=success oversized=failure stderr="Sandbox output limit exceeded" retainedBytes=8388608 durationMs=12 unhandledExceptions=0
+PROBE malformed: revision=4a72f76 file=a.b.json constructor=throws error="Invalid sandbox ID"
+    at sandboxDirectory (file:///Users/hteo/.paseo/worktrees/2khn4gl5/332b93fde5a2/handoffs/TH1-1999/.confirm-scratch/baseline.mjs:19:11)
+    at ProgressStore.filename (file:///Users/hteo/.paseo/worktrees/2khn4gl5/332b93fde5a2/handoffs/TH1-1999/.confirm-scratch/baseline.mjs:45:5)
+    at ProgressStore.read (file:///Users/hteo/.paseo/worktrees/2khn4gl5/332b93fde5a2/handoffs/TH1-1999/.confirm-scratch/baseline.mjs:50:43)
+    at new ProgressStore (file:///Users/hteo/.paseo/worktrees/2khn4gl5/332b93fde5a2/handoffs/TH1-1999/.confirm-scratch/baseline.mjs:31:27)
+PROBE malformed: revision=0dc1855 file=a.b.json constructor=throws error="Invalid sandbox ID"
+    at sandboxDirectory (file:///Users/hteo/.paseo/worktrees/2khn4gl5/332b93fde5a2/handoffs/TH1-1999/.confirm-scratch/head.mjs:27:11)
+    at ProgressStore.filename (file:///Users/hteo/.paseo/worktrees/2khn4gl5/332b93fde5a2/handoffs/TH1-1999/.confirm-scratch/head.mjs:152:5)
+    at ProgressStore.read (file:///Users/hteo/.paseo/worktrees/2khn4gl5/332b93fde5a2/handoffs/TH1-1999/.confirm-scratch/head.mjs:157:43)
+    at new ProgressStore (file:///Users/hteo/.paseo/worktrees/2khn4gl5/332b93fde5a2/handoffs/TH1-1999/.confirm-scratch/head.mjs:134:27)
+RESULT: both reviewed fixes confirmed; malformed filename boot failure reproduces on unchanged baseline, not a regression

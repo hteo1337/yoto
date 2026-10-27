@@ -1,1 +1,1 @@
-TH1-1999: primary and adversarial reviews ran; after this writer stops, lead must route brief fix confirmation to the same adversarial reviewer task 98a88e14a3cd449bb4e8510fcc103a29; real ts.net/iOS acceptance still needs Teo's Yoto client/callback and Tailscale HTTPS/auth prerequisites; PR stays draft.
+TH1-1999: no source-fix confirmation blocker; live ts.net/iOS acceptance still needs operator Yoto callback/client and Tailscale HTTPS/auth prerequisites; CI unavailable and PR remains draft.

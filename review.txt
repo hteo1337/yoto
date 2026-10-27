@@ -1,0 +1,9 @@
+Verdict: CONFIRMED [adversarial-fix]
+
+Scoped fix confirmation for TH1-1999 — Self-host Yoto Sync on Docker + Tailscale, exact head `0dc18555581305193fc76bc061d904e758ecbeb1` (76427de + 0dc1855 over 4a72f76). Dispatcher confirms `codex-auto` / `gpt-6.1-sol`; this is not a new review.
+
+- Scratch (`selfhost/shims/storage.ts:28`): built Node startup returned health 200; the original interrupted-scratch assertion passes. Restart error persisted, complete/error replay files stayed byte-identical, outside sentinel survived.
+- Kill error (`selfhost/shims/sandbox.ts:16-29`): real shim `printf small` succeeded; `head -c 8388609 /dev/zero` returned `success=false`, `Sandbox output limit exceeded`, exactly 8,388,608 retained bytes, in 12ms; standalone Node exited 0 with no unhandled exception (macOS / Node v26.12.1).
+- Filename repro: write `a.b.json` containing `{"event":{"type":"progress"}}` into an isolated progress directory, then `new ProgressStore(directory)`. **Both 4a72f76 and 0dc1855 throw `Invalid sandbox ID`** through constructor → read → filename → sandboxDirectory, before the new cleanup call. The premise that baseline survived is incorrect. Pre-existing P2 boot failure for malformed local state; no new regression, hence no blocker.
+
+`npm test` ran once: **26 files / 280 tests passed**, exit 0; no competing test processes observed. `npm run build:selfhost` and scoped probe exited 0. Nothing else blocking found within the requested fixes. Repro/logs: `handoffs/TH1-1999/confirm-probe.{mjs,log}` on `review/TH1-1999-c134cf58f6ed`. CI unavailable (zero workflows/check runs), not passing. Feature branch unchanged; PR remains draft.
