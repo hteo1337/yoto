@@ -210,8 +210,7 @@ describe("api/import/:cardId loader", () => {
 
     it("rejects YouTube Mixes", async () => {
         const {args} = createLoaderArgs({
-            importUrl:
-                "https://www.youtube.com/watch?v=video-1&list=RDvideo-1&start_radio=1",
+            importUrl: "https://www.youtube.com/playlist?list=RDvideo-1",
         })
 
         const response = await loader(args)
