@@ -3,7 +3,10 @@ type YouTubeUrlType = "video" | "playlist" | "unknown"
 const isYouTubeMix = (value: string): boolean => {
     try {
         const url = new URL(value)
-        return url.searchParams.get("list")?.startsWith("RD") ?? false
+        return (
+            !url.searchParams.has("v") &&
+            (url.searchParams.get("list")?.startsWith("RD") ?? false)
+        )
     } catch {
         return false
     }
@@ -18,7 +21,16 @@ const getYouTubeUrlType = (value: string): YouTubeUrlType => {
             url.hostname === "youtu.be"
 
         if (!isYouTubeHost) return "unknown"
-        if (url.searchParams.has("list")) return "playlist"
+        if (url.pathname.startsWith("/browse/MPREb_")) return "playlist"
+        if (
+            url.searchParams.has("list") &&
+            !(
+                url.searchParams.has("v") &&
+                url.searchParams.get("list")?.startsWith("RD")
+            )
+        ) {
+            return "playlist"
+        }
 
         if (
             (url.hostname === "youtube.com" ||
@@ -49,6 +61,7 @@ const getCanonicalYouTubeUrl = (value: string): string => {
             if (playlistId) {
                 return `https://www.youtube.com/playlist?list=${encodeURIComponent(playlistId)}`
             }
+            if (url.pathname.startsWith("/browse/MPREb_")) return value
         }
 
         if (type === "video") {

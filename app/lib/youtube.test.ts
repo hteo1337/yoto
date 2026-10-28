@@ -7,13 +7,12 @@ import {
 } from "./youtube"
 
 describe("isYouTubeMix", () => {
-    it.each([
-        "https://www.youtube.com/watch?v=abc123&list=RDabc123&start_radio=1",
-        "https://www.youtube.com/watch?v=abc123&list=RDabc123",
-        "https://www.youtube.com/playlist?list=RDabc123",
-    ])("identifies a YouTube Mix URL: %s", url => {
-        expect(isYouTubeMix(url)).toBe(true)
-    })
+    it.each(["https://www.youtube.com/playlist?list=RDabc123"])(
+        "identifies a YouTube Mix URL: %s",
+        url => {
+            expect(isYouTubeMix(url)).toBe(true)
+        },
+    )
 
     it.each([
         "https://www.youtube.com/playlist?list=PL123",
@@ -39,6 +38,7 @@ describe("getYouTubeUrlType", () => {
         "https://www.youtube.com/playlist?list=PL123",
         "https://www.youtube.com/watch?v=abc123&list=PL123",
         "https://youtu.be/abc123?list=PL123",
+        "https://music.youtube.com/browse/MPREb_example",
     ])("identifies a playlist URL: %s", url => {
         expect(getYouTubeUrlType(url)).toBe("playlist")
     })
@@ -78,5 +78,19 @@ describe("getCanonicalYouTubeUrl", () => {
         expect(getCanonicalYouTubeUrl("https://example.com/video")).toBe(
             "https://example.com/video",
         )
+    })
+
+    it("preserves a YouTube Music album URL", () => {
+        const url = "https://music.youtube.com/browse/MPREb_example"
+        expect(getCanonicalYouTubeUrl(url)).toBe(url)
+    })
+
+    it("canonicalizes a radio song link as a video", () => {
+        const url = "https://music.youtube.com/watch?v=abc123&list=RDabc123"
+        expect(getYouTubeUrlType(url)).toBe("video")
+        expect(getCanonicalYouTubeUrl(url)).toBe(
+            "https://www.youtube.com/watch?v=abc123",
+        )
+        expect(isYouTubeMix(url)).toBe(false)
     })
 })
