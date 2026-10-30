@@ -7,4 +7,4 @@ Verification: npm ci/lint/typecheck:ci/test/build/build:selfhost exit 0; 26 file
 Edges/security: www/music/mobile/browse/short RD and hostile host/encoding shapes inspected; no new non-YouTube command path found. No WSL/live stack access or UI/browser check.
 Decided: semif no adversarial required (no 0.9149); actual app diff and PLAN.md supplied, no changed guard/permission/concurrency/migration/install/integration paths.
 Next: author fixes P1 findings; same-reviewer brief confirmation on corrected head; lead removes feature handoffs and owns ready/merge gate. Review branch must not be merged into feature.
-Open questions: none. Review comment: https://github.com/hteo1337/yoto/pull/2#issuecomment-6533296277; artifact and logs on review branch; implementation remains blocked on findings.
+Open questions: none. Linear updated with verdict/evidence; review branch pushed and generated build/dependency output removed (pre-existing ignored rules preserved). Review comment: https://github.com/hteo1337/yoto/pull/2#issuecomment-6533296277; artifact and logs on review branch; implementation remains blocked on findings.
