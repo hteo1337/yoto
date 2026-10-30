@@ -1,0 +1,148 @@
+
+ RUN  v4.0.18 /Users/hteo/.paseo/worktrees/2khn4gl5/106a9b4d5802
+
+stdout | app/lib/th1-2013-review-probe.test.ts > observes the actual route-to-inspection URL boundary
+[
+  {
+    "url": "https://www.youtube.com/watch?v=abc123&list=RDabc123",
+    "schema": true,
+    "type": "video",
+    "mix": false,
+    "canonical": "https://www.youtube.com/watch?v=abc123",
+    "routeStatus": 200,
+    "inspection": "success",
+    "commands": [
+      "yt-dlp --no-check-certificates --flat-playlist --print \"%(playlist_id)s\t%(playlist_title)s\t%(id)s\t%(title)s\t%(duration)s\" 'https://www.youtube.com/watch?v=abc123&list=RDabc123'"
+    ]
+  },
+  {
+    "url": "https://music.youtube.com/watch?v=abc123&list=RDabc123",
+    "schema": true,
+    "type": "video",
+    "mix": false,
+    "canonical": "https://www.youtube.com/watch?v=abc123",
+    "routeStatus": 200,
+    "inspection": "Error: Invalid YouTube URL",
+    "commands": []
+  },
+  {
+    "url": "https://music.youtube.com/browse/MPREb_example",
+    "schema": true,
+    "type": "playlist",
+    "mix": false,
+    "canonical": "https://music.youtube.com/browse/MPREb_example",
+    "routeStatus": 200,
+    "inspection": "Error: Invalid YouTube URL",
+    "commands": []
+  },
+  {
+    "url": "https://m.youtube.com/watch?v=abc123&list=RDabc123",
+    "schema": true,
+    "type": "video",
+    "mix": false,
+    "canonical": "https://www.youtube.com/watch?v=abc123",
+    "routeStatus": 200,
+    "inspection": "Error: Invalid YouTube URL",
+    "commands": []
+  },
+  {
+    "url": "https://www.youtube.com/browse/MPREb_example",
+    "schema": true,
+    "type": "playlist",
+    "mix": false,
+    "canonical": "https://www.youtube.com/browse/MPREb_example",
+    "routeStatus": 200,
+    "inspection": "Error: Invalid YouTube URL",
+    "commands": []
+  },
+  {
+    "url": "https://youtu.be/abc123?list=RDabc123",
+    "schema": true,
+    "type": "playlist",
+    "mix": true,
+    "canonical": "https://www.youtube.com/playlist?list=RDabc123",
+    "routeStatus": 400,
+    "inspection": "not started",
+    "commands": []
+  },
+  {
+    "url": "https://www.youtube.com/playlist?list=RDabc123",
+    "schema": true,
+    "type": "playlist",
+    "mix": true,
+    "canonical": "https://www.youtube.com/playlist?list=RDabc123",
+    "routeStatus": 400,
+    "inspection": "not started",
+    "commands": []
+  },
+  {
+    "url": "https://music.youtube.com/browse/UCexample",
+    "schema": true,
+    "type": "unknown",
+    "mix": false,
+    "canonical": "https://music.youtube.com/browse/UCexample",
+    "routeStatus": 200,
+    "inspection": "Error: Invalid YouTube URL",
+    "commands": []
+  },
+  {
+    "url": "https://music.youtube.com.evil.invalid/browse/MPREb_example",
+    "schema": true,
+    "type": "unknown",
+    "mix": false,
+    "canonical": "https://music.youtube.com.evil.invalid/browse/MPREb_example",
+    "routeStatus": 200,
+    "inspection": "Error: Invalid YouTube URL",
+    "commands": []
+  },
+  {
+    "url": "https://music.youtube.com@evil.invalid/browse/MPREb_example",
+    "schema": true,
+    "type": "unknown",
+    "mix": false,
+    "canonical": "https://music.youtube.com@evil.invalid/browse/MPREb_example",
+    "routeStatus": 200,
+    "inspection": "Error: Invalid YouTube URL",
+    "commands": []
+  },
+  {
+    "url": "https://music.youtube.com%2eevil.invalid/browse/MPREb_example",
+    "schema": true,
+    "type": "unknown",
+    "mix": false,
+    "canonical": "https://music.youtube.com%2eevil.invalid/browse/MPREb_example",
+    "routeStatus": 200,
+    "inspection": "Error: Invalid YouTube URL",
+    "commands": []
+  },
+  {
+    "url": "https://music.youtube.com/browse/MPREb_example%27%3Btouch%20x",
+    "schema": true,
+    "type": "playlist",
+    "mix": false,
+    "canonical": "https://music.youtube.com/browse/MPREb_example%27%3Btouch%20x",
+    "routeStatus": 200,
+    "inspection": "Error: Invalid YouTube URL",
+    "commands": []
+  },
+  {
+    "url": "https://www.youtube.com/watch?v=abc123",
+    "schema": true,
+    "type": "video",
+    "mix": false,
+    "canonical": "https://www.youtube.com/watch?v=abc123",
+    "routeStatus": 200,
+    "inspection": "Error: Failed to parse video info",
+    "commands": [
+      "yt-dlp --no-check-certificates --dump-single-json --skip-download --no-playlist 'https://www.youtube.com/watch?v=abc123'"
+    ]
+  }
+]
+
+ ✓ app/lib/th1-2013-review-probe.test.ts (1 test) 14ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  22:55:42
+   Duration  248ms (transform 65ms, setup 0ms, import 111ms, tests 14ms, environment 0ms)
+

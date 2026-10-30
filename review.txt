@@ -1,0 +1,29 @@
+Verdict: BLOCKING
+
+Reviewed exact head b1aab680580b3c1d23978e8c8c95547a181118ed of hteo1337/yoto#2 (TH1-2013) in separate review worktree. No feature-branch changes, ready transition, merge, or WSL/stack access.
+
+P1 — app/lib/youtube.ts:7-8: Allowing v+RD past the Mix guard exposes the unchanged playlist execution path. api.import.$cardId.tsx:61-80 submits the ORIGINAL youtubeUrl; canonicalization at line 70 is telemetry only. import.server.ts:405-409 forwards that original string. sandbox.server.ts:139-143 uses url.includes("list=") and calls yt-dlp --flat-playlist with the RD parameter intact. Thus https://www.youtube.com/watch?v=abc123&list=RDabc123 expands the radio rather than importing one song. Apply canonicalization to the operational URL and use consistent classification at inspection, not only in logs. The previous head rejected this shape at the Mix guard (visible in the diff); the new helper-only test does not exercise this path.
+
+P1 — app/lib/youtube.ts:24 (and passthrough at line 64): Album recognition never reaches an album-capable importer. The schema accepts the URL and the route starts a workflow, but sandbox.server.ts:37-43,130-132 rejects all /browse/ URLs and music.youtube.com/m.youtube.com hosts with "Invalid YouTube URL". This also defeats the requested Music radio-song import. Even simply admitting browse URLs into this validator is insufficient: without list= they enter the single-video --dump-single-json --no-playlist branch and parseVideoInfo requires a video id/title, rather than enumerating album entries. Connect classification/canonicalization to actual playlist inspection and resolve or enumerate albums there. A standalone yt-dlp probe does not validate this application path.
+
+Nothing found / scope details:
+- AddTracksDialog correctly enables chapter controls for v+RD watch URLs and passes browse albums without the Mix error. URLSearchParams preserves the URL in transport. importSearchParamsSchema accepts both shapes; it only checks URL syntax, not a YouTube allowlist.
+- Helper canonicalization does drop list on v+RD watch URLs. It works for www, music and m hosts at helper level, but the route does not use that result for execution.
+- Host suffix matching rejects music.youtube.com.evil.invalid, userinfo-to-evil-host and percent-encoded dot suffix attacks. Encoded delimiters do not become shell syntax: the actual sink uses shell-escape, and browse shapes currently fail its validator before any command. No new non-YouTube URL/shell injection reaching yt-dlp found. Do not mistake getCanonicalYouTubeUrl's unknown-URL passthrough for a validation boundary; if the sink is widened, retain explicit HTTP(S)/host/path validation.
+- www.youtube.com/browse/MPREb_... classifies as playlist but fails the same sink validator. Non-album /browse/UC... is unknown and rejected by the sink. Prefix-only MPREb_ validation also accepts empty suffix/extra path segments, but these are currently rejected downstream.
+- youtu.be/X?list=RD... remains classified as playlist/Mix and rejected (no v query parameter). This is a pre-existing edge limitation, outside the issue's explicit watch?v acceptance; it is not fixed by this PR.
+- Route fixture change is valid for retaining bare-Mix rejection, but replaces the only route-level v+RD assertion without adding an acceptance-path assertion. It therefore misses the newly exposed radio expansion above.
+- No concurrency, migrations, permissions, credentials, installer/restart or multi-PR integration changes found. Semif evaluated the actual app diff and PLAN.md: no adversarial review required (no 0.9149 / yes 0.0851). This does not approve the blocking URL plumbing.
+
+Verification on head (one requested sequence, Node v26.13.0; local macOS, not CI/live proof):
+- npm ci: 0.
+- npm run format: 1. Warned on .paseo-ops-rules.json plus reviewer-created/modified handoffs. git ls-files .paseo-ops-rules.json is empty; git check-ignore locates it in .git/info/exclude. It is not in the tracked tree or PR. Prettier API check of the original HEAD STATUS and all three changed source files returned true.
+- npm run lint: 0.
+- npm run typecheck:ci: 0.
+- npm test: 0, 26 files / 281 tests.
+- npm run build: 0.
+- npm run build:selfhost: 0.
+- One temporary local probe test: 1 passed; actual loader -> submitted workflow parameters -> inspectVideo -> getPlaylistInfo, with authentication/credential/bindings and sandbox exec mocked. It captured the real constructed command, not a real yt-dlp/network execution. Ordinary watch URL selected --no-playlist; v+RD www selected --flat-playlist with RD intact; music/mobile/browse and attacker hosts failed the sink; bare and shortened RD links returned 400. Probe source/output retained under handoffs/TH1-2013/. No extra full-suite run or mutation/test-writer lane.
+- GitHub statusCheckRollup is empty on this exact head. CI green is not established; no billing failure claimed.
+
+Lead/author next: fix the two P1 integration gaps, obtain brief confirmation from this review's findings/repro on the corrected exact head, and remove handoffs from the feature diff before the lead's merge gate. PR remains draft/unmerged.

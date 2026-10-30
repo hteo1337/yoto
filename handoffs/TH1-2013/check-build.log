@@ -1,0 +1,65 @@
+
+> yoto@1.0.0 build
+> react-router build
+
+(node:46465) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Using Vite Environment API (experimental)
+vite v7.3.1 building client environment for production...
+transforming...
+app/components/ui/label.tsx (1:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+app/components/ui/sonner.tsx (1:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+✓ 2271 modules transformed.
+✘ [ERROR] The build was canceled
+
+Generated an empty chunk: "auth.callback".
+Generated an empty chunk: "logout".
+Generated an empty chunk: "api.import._cardId".
+Generated an empty chunk: "api.imports._importId".
+Generated an empty chunk: "api.icons".
+Generated an empty chunk: "api.feedback".
+rendering chunks...
+computing gzip size...
+build/client/.assetsignore                               0.02 kB
+build/client/.vite/manifest.json                         6.06 kB │ gzip:  0.87 kB
+build/client/assets/root-BFYe8Q7U.css                   47.95 kB │ gzip:  8.76 kB
+build/client/assets/auth.callback-l0sNRNKZ.js            0.00 kB │ gzip:  0.02 kB
+build/client/assets/logout-l0sNRNKZ.js                   0.00 kB │ gzip:  0.02 kB
+build/client/assets/api.import._cardId-l0sNRNKZ.js       0.00 kB │ gzip:  0.02 kB
+build/client/assets/api.imports._importId-l0sNRNKZ.js    0.00 kB │ gzip:  0.02 kB
+build/client/assets/api.icons-l0sNRNKZ.js                0.00 kB │ gzip:  0.02 kB
+build/client/assets/api.feedback-l0sNRNKZ.js             0.00 kB │ gzip:  0.02 kB
+build/client/assets/layout.protected-BjdKsPD6.js         0.13 kB │ gzip:  0.14 kB
+build/client/assets/index-B7XIc6Rr.js                    0.37 kB │ gzip:  0.27 kB
+build/client/assets/card-BLVJibcj.js                     0.93 kB │ gzip:  0.42 kB
+build/client/assets/login-ChkC4nP-.js                    0.96 kB │ gzip:  0.55 kB
+build/client/assets/createLucideIcon-DLolNCUD.js         1.21 kB │ gzip:  0.70 kB
+build/client/assets/landing-B0n4JXsT.js                  3.07 kB │ gzip:  1.18 kB
+build/client/assets/index-C7H8MSZe.js                    3.71 kB │ gzip:  1.42 kB
+build/client/assets/cards-DgLAlib7.js                    4.42 kB │ gzip:  1.83 kB
+build/client/assets/button-BXggtKqS.js                  29.80 kB │ gzip:  9.81 kB
+build/client/assets/root-Blut8qpk.js                    33.48 kB │ gzip: 11.49 kB
+build/client/assets/cards._id-0CIkUy-k.js               37.94 kB │ gzip: 12.37 kB
+build/client/assets/dropdown-menu-DXYdt8mg.js           50.44 kB │ gzip: 17.23 kB
+build/client/assets/label-1mNEUibN.js                   68.35 kB │ gzip: 21.19 kB
+build/client/assets/CardCover-DJm4nVS5.js              121.65 kB │ gzip: 40.09 kB
+build/client/assets/chunk-EPOLDU6W-C4qh38Xk.js         124.78 kB │ gzip: 42.15 kB
+build/client/assets/entry.client-DHca9znc.js           186.77 kB │ gzip: 58.99 kB
+✓ built in 1.82s
+vite v7.3.1 building ssr environment for production...
+transforming...
+app/components/ui/sonner.tsx (1:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+app/components/ui/label.tsx (1:0): Error when using sourcemap for reporting an error: Can't resolve original location of error.
+✓ 3034 modules transformed.
+rendering chunks...
+build/server/.vite/manifest.json                   0.72 kB
+build/server/wrangler.json                         2.05 kB
+build/server/assets/server-build-BFYe8Q7U.css     47.95 kB
+build/server/index.js                              0.43 kB
+build/server/assets/worker-entry-DFGb_m6z.js   1,249.98 kB
+build/server/assets/server-build-oc3Qg4QO.js   2,471.01 kB
+
+✓ 1 asset cleaned from React Router server build.
+build/server/assets/server-build-BFYe8Q7U.css
+
+✓ built in 2.05s

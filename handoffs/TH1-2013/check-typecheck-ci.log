@@ -1,0 +1,6 @@
+
+> yoto@1.0.0 typecheck:ci
+> react-router typegen && tsc
+
+(node:44284) [DEP0205] DeprecationWarning: `module.register()` is deprecated. Use `module.registerHooks()` instead.
+(Use `node --trace-deprecation ...` to show where the warning was created)

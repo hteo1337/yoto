@@ -1,0 +1,54 @@
+import {expect, it, vi} from "vitest"
+import {createMockEnv} from "~/tests/mocks"
+import {getCanonicalYouTubeUrl, getYouTubeUrlType, isYouTubeMix} from "./youtube"
+import {importSearchParamsSchema} from "~/schemas/import"
+const {commands, submitted} = vi.hoisted(() => ({commands: [] as string[], submitted: [] as any[]}))
+vi.mock("@cloudflare/sandbox", () => ({getSandbox: () => ({exec: async (command: string) => {
+    commands.push(command)
+    return {success: true, stdout: 'RDabc123\tRadio\tabc123\tSong\t180\n', stderr: ''}
+}})}))
+vi.mock("~/lib/auth.server", () => ({isAuthenticated: async () => true, requireAuthCore: async () => ({token: 'synthetic-probe'})}))
+vi.mock("~/lib/import-credential.server", () => ({createImportCredential: async () => 'synthetic-probe'}))
+vi.mock("~/lib/logger.server", () => ({logger: {info: () => {}, error: () => {}, warn: () => {}}}))
+vi.mock("~/lib/telemetry.server", () => ({EVENT: {IMPORT: {STARTED: 'started', FAILED: 'failed'}}, telemetry: {info: () => {}, error: () => {}}}))
+import {loader} from "~/routes/api.import.$cardId"
+import {inspectVideo} from "./import.server"
+it("observes the actual route-to-inspection URL boundary", async () => {
+    const inputs = [
+        'https://www.youtube.com/watch?v=abc123&list=RDabc123',
+        'https://music.youtube.com/watch?v=abc123&list=RDabc123',
+        'https://music.youtube.com/browse/MPREb_example',
+        'https://m.youtube.com/watch?v=abc123&list=RDabc123',
+        'https://www.youtube.com/browse/MPREb_example',
+        'https://youtu.be/abc123?list=RDabc123',
+        'https://www.youtube.com/playlist?list=RDabc123',
+        'https://music.youtube.com/browse/UCexample',
+        'https://music.youtube.com.evil.invalid/browse/MPREb_example',
+        'https://music.youtube.com@evil.invalid/browse/MPREb_example',
+        'https://music.youtube.com%2eevil.invalid/browse/MPREb_example',
+        'https://music.youtube.com/browse/MPREb_example%27%3Btouch%20x',
+        'https://www.youtube.com/watch?v=abc123',
+    ]
+    const env = createMockEnv({IMPORT_PROGRESS: {getByName: () => ({fetch: async () => new Response('ok')})} as any, IMPORT_WORKFLOW: {create: async (value: any) => {submitted.push(value.params)}} as any})
+    const observations = []
+    for (const url of inputs) {
+        const prior = submitted.length
+        const commandStart = commands.length
+        const schema = importSearchParamsSchema.safeParse({url})
+        const response = await loader({params: {cardId: 'probe'}, request: new Request('https://local.invalid/api/import/probe?' + new URLSearchParams({url})), context: {get: () => ({env})}} as any)
+        let inspection = 'not started'
+        if (submitted.length > prior) {
+            try {await inspectVideo(env, submitted.at(-1)); inspection = 'success'} catch (error) {inspection = String(error)}
+        }
+        observations.push({url, schema: schema.success, type: getYouTubeUrlType(url), mix: isYouTubeMix(url), canonical: getCanonicalYouTubeUrl(url), routeStatus: response.status, inspection, commands: commands.slice(commandStart)})
+    }
+    console.log(JSON.stringify(observations, null, 2))
+    expect(observations[0].commands[0]).toContain('--flat-playlist')
+    expect(observations[0].commands[0]).toContain('&list=RDabc123')
+    expect(observations[1].inspection).toContain('Invalid YouTube URL')
+    expect(observations[2].inspection).toContain('Invalid YouTube URL')
+    expect(observations[5].routeStatus).toBe(400)
+    expect(observations[6].routeStatus).toBe(400)
+    expect(observations[8].commands).toEqual([])
+    expect(observations[12].commands[0]).toContain('--no-playlist')
+})

@@ -1,0 +1,9 @@
+
+> yoto@1.0.0 format
+> prettier --check .
+
+Checking formatting...
+[warn] .paseo-ops-rules.json
+[warn] handoffs/CHECKLIST-6714a80a.md
+[warn] handoffs/TH1-2013/STATUS.md
+[warn] Code style issues found in 3 files. Run Prettier with --write to fix.
